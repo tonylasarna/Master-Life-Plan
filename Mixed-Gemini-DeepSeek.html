@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Life Plan 2025 - Integrated Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #0ea5e9;
+            --accent: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            --light: #f8fafc;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+            padding: 1rem 0.75rem;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 600;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        .section-title h2::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: white; padding: 2.5rem; border-radius: 15px;
+            max-width: 90%; width: 600px; max-height: 80vh; overflow-y: auto;
+        }
+        .loader {
+            border: 4px solid #f3f3f3; border-top: 4px solid var(--primary);
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        .tag {
+            display: inline-block; padding: 5px 12px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 600; margin: 2px;
+        }
+        .tag-health { background-color: #dbeafe; color: var(--primary); }
+        .tag-work { background-color: #ede9fe; color: var(--accent); }
+        .tag-family { background-color: #f0fdf4; color: var(--success); }
+        .tag-learning { background-color: #ecfeff; color: #06b6d4; }
+        .timeline { position: relative; padding: 20px 0; }
+        .timeline::before {
+            content: ''; position: absolute; top: 0; bottom: 0;
+            left: 20px; width: 4px; background: var(--light-gray); border-radius: 2px;
+        }
+        .timeline-item { position: relative; padding-left: 50px; margin-bottom: 30px; }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-dot {
+            position: absolute; left: 12px; top: 5px; width: 20px; height: 20px;
+            border-radius: 50%; background: var(--primary); z-index: 1;
+        }
+        .timeline-content {
+            background: var(--light); border-radius: 10px; padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        .timeline-title { font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none; }
+            .card { box-shadow: none; border: 1px solid #e5e7eb; }
+            .tab-content { display: block !important; }
+            .modal-overlay { display: none; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-dark">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] text-white p-8 shadow-lg relative overflow-hidden border-b-4 border-[var(--accent)]">
+        <div class="relative z-10 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-shadow">Master Life Plan 2025</h1>
+            <p class="max-w-3xl mx-auto text-lg md:text-xl opacity-90">Your Integrated Dashboard for a Year of Growth</p>
+            <div class="mt-6 inline-block bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2">
+                    <div class="flex items-center gap-2"><i class="fas fa-user"></i> Anthony Ramirez, 44</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-briefcase"></i> IT Manager</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt"></i> Toronto, ON</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-heartbeat"></i> Sciatica & Ulcer Management</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="mb-8 no-print sticky top-0 bg-white/80 backdrop-blur-md z-40 shadow-md">
+        <div class="container mx-auto">
+            <nav class="-mb-px flex justify-center space-x-2 sm:space-x-4 overflow-x-auto" aria-label="Tabs">
+                <button onclick="showTab('dashboard')" class="tab-button active flex-shrink-0">Dashboard</button>
+                <button onclick="showTab('schedule')" class="tab-button flex-shrink-0">Schedule</button>
+                <button onclick="showTab('nutrition')" class="tab-button flex-shrink-0">Nutrition</button>
+                <button onclick="showTab('exercise')" class="tab-button flex-shrink-0">Exercise</button>
+                <button onclick="showTab('wellbeing')" class="tab-button flex-shrink-0">Well-being</button>
+                <button onclick="showTab('career')" class="tab-button flex-shrink-0">Career</button>
+                <button onclick="showTab('family')" class="tab-button flex-shrink-0">Family</button>
+                <button onclick="showTab('tracking')" class="tab-button flex-shrink-0">Tracking</button>
+            </nav>
+        </div>
+    </div>
+
+    <main class="container mx-auto">
+        <!-- Tab Content -->
+        <div id="tab-content-container">
+            <!-- Dashboard -->
+            <div id="dashboard" class="tab-content">
+                <div class="section-title">
+                    <h2>Today's Focus: <span id="currentDate" class="font-medium text-gray-500"></span></h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card p-6 col-span-1 md:col-span-2 lg:col-span-1">
+                        <h3 class="font-bold text-xl mb-4"><i class="fas fa-check-square mr-2 text-[var(--primary)]"></i>Daily Checklist</h3>
+                        <ul id="daily-checklist" class="space-y-3 text-gray-700"></ul>
+                    </div>
+                    <div class="card p-6 flex flex-col justify-center items-center text-center bg-gradient-to-br from-[var(--primary)] to-[var(--accent)] text-white">
+                        <h3 class="font-bold text-xl mb-3"><i class="fas fa-quote-left mr-2"></i>Quote of the Day</h3>
+                        <p id="motivational-quote" class="text-xl italic"></p>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-4"><i class="fas fa-tint mr-2 text-[var(--primary)]"></i>Hydration & Supplements</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="water-tracker" class="block text-sm font-medium text-gray-700">Water Intake (Goal: 3.5 - 4.0 L)</label>
+                                <div class="flex items-center mt-1">
+                                    <input type="range" id="water-tracker" min="0" max="4" step="0.25" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[var(--primary)]">
+                                    <span id="water-level" class="ml-4 font-semibold text-[var(--primary)] w-20 text-center">0.00 L</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-700 mb-2">Supplements:</p>
+                                <div id="supplement-tracker" class="space-y-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule -->
+            <div id="schedule" class="tab-content hidden">
+                <div class="section-title"><h2>Master Weekly Schedule</h2></div>
+                <div class="card p-6 overflow-x-auto">
+                    <table class="w-full border-collapse min-w-[1000px]">
+                        <thead class="bg-gray-100"><tr class="text-left"><th class="p-4">Time</th><th class="p-4">Monday</th><th class="p-4">Tuesday</th><th class="p-4">Wednesday</th><th class="p-4">Thursday</th><th class="p-4">Friday</th><th class="p-4">Saturday</th><th class="p-4">Sunday</th></tr></thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr><td class="p-4 font-semibold">5:30-6:00</td><td class="p-4" colspan="7"><span class="tag tag-health">Wake-Up & Hydrate</span></td></tr>
+                            <tr><td class="p-4 font-semibold">6:00-7:00</td><td class="p-4" colspan="5"><span class="tag tag-health">Bike Commute</span></td><td class="p-4 bg-green-50"><span class="tag tag-health">Pilates/Yoga</span></td><td class="p-4 bg-green-50"><span class="tag tag-family">Family Walk</span></td></tr>
+                            <tr><td class="p-4 font-semibold">7:00-7:30</td><td class="p-4 bg-blue-50" colspan="5"><span class="tag tag-health">AM Gym Session</span></td><td class="p-4" colspan="2">Prepare Breakfast</td></tr>
+                            <tr><td class="p-4 font-semibold">7:45-8:15</td><td class="p-4 bg-yellow-50" colspan="5"><span class="tag tag-learning">GCP Study Block 1</span></td><td class="p-4" colspan="2">Family Breakfast</td></tr>
+                            <tr><td class="p-4 font-semibold">8:30-12:00</td><td class="p-4" colspan="5"><span class="tag tag-work">Work Block</span></td><td class="p-4" colspan="2">Meal Prep & Errands</td></tr>
+                            <tr><td class="p-4 font-semibold">12:15-12:45</td><td class="p-4 bg-yellow-50" colspan="5"><span class="tag tag-learning">GCP Study Block 2</span></td><td class="p-4" colspan="2">Lunch</td></tr>
+                            <tr><td class="p-4 font-semibold">1:00-5:00</td><td class="p-4" colspan="5"><span class="tag tag-work">Work Block</span></td><td class="p-4" colspan="2">Free/Family Time</td></tr>
+                            <tr><td class="p-4 font-semibold">5:00-6:00</td><td class="p-4 bg-red-50"><span class="tag tag-health">Weightlifting: Upper</span></td><td class="p-4"><span class="tag tag-health">Bike Home</span></td><td class="p-4 bg-red-50"><span class="tag tag-health">Weightlifting: Lower</span></td><td class="p-4"><span class="tag tag-health">Bike Home</span></td><td class="p-4 bg-red-50"><span class="tag tag-health">Weightlifting: Full</span></td><td class="p-4" colspan="2">Prepare Dinner</td></tr>
+                            <tr><td class="p-4 font-semibold">6:00-7:00</td><td class="p-4" colspan="7"><span class="tag tag-family">Family Dinner</span></td></tr>
+                            <tr><td class="p-4 font-semibold">7:00-7:30</td><td class="p-4 bg-purple-50" colspan="7"><span class="tag tag-family">Family Activity</span></td></tr>
+                            <tr><td class="p-4 font-semibold">7:30-8:00</td><td class="p-4 bg-indigo-50" colspan="7"><span class="tag tag-health">Conscious Breathing</span></td></tr>
+                            <tr><td class="p-4 font-semibold">8:00-8:30</td><td class="p-4 bg-yellow-50" colspan="5"><span class="tag tag-learning">GCP Study Block 3</span></td><td class="p-4" colspan="2">Wind-down</td></tr>
+                            <tr><td class="p-4 font-semibold">9:30 PM</td><td class="p-4" colspan="7"><span class="tag tag-health">Sleep</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Nutrition -->
+            <div id="nutrition" class="tab-content hidden">
+                <div class="section-title"><h2>Performance Nutrition Protocol</h2></div>
+                <div class="card p-6 mb-6">
+                    <h3 class="font-bold text-xl mb-4">Core Principles</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><b>17/7 Intermittent Fasting (4x/week):</b> Eating window ~12:00 PM - 7:00 PM on workdays.</li>
+                        <li><b>Dietary Focus:</b> Anti-inflammatory, gut-friendly foundation: Low-FODMAP, Low-Carb, Low-Sugar, Low-Salt.</li>
+                        <li><b>Family Integration:</b> Use a "Unified Base Meal" system. Your restrictive diet is the base, with healthy add-ons for family members.</li>
+                    </ul>
+                </div>
+                <div class="card p-6">
+                    <h3 class="font-bold text-xl mb-4">Seasonal Shopping & Recipe Generator</h3>
+                    <p class="mb-4">Select a season to see the recommended shopping list for Ontario. Then, generate tailored recipe ideas!</p>
+                    <div id="seasonal-shopping-list" class="mb-6"></div>
+                    <button id="generate-recipes-btn" class="w-full bg-[var(--primary)] text-white font-bold py-3 px-4 rounded-lg hover:bg-[var(--secondary)] transition duration-300 flex items-center justify-center">
+                        <i class="fas fa-magic mr-2"></i>Generate Seasonal Recipes
+                    </button>
+                </div>
+            </div>
+
+            <!-- Exercise -->
+            <div id="exercise" class="tab-content hidden">
+                 <div class="section-title"><h2>Resilient Body Exercise Program</h2></div>
+                <div class="card p-6 mb-6">
+                    <h3 class="font-bold text-xl mb-4">Sciatica-Safe Framework</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><b>Warm-Up/Cool-Down is Mandatory:</b> 5-10 mins of dynamic movement before, 5-10 mins of static stretching after.</li>
+                        <li><b>The Pain Rule:</b> Stop immediately if you feel any sharp, shooting, or radiating pain. Differentiate muscle work from nerve pain.</li>
+                        <li><b>Maintain Neutral Spine:</b> Protect your lumbar spine during all movements. Avoid excessive arching or rounding.</li>
+                    </ul>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="card p-6"><h3 class="font-bold text-lg mb-4">Upper Body (Mon)</h3><p class="text-sm mb-2 text-gray-500">3 sets of 8-12 reps. Focus on supported movements.</p><ul class="list-disc list-inside space-y-1"><li>Dumbbell Bench Press</li><li>Seated Cable Row</li><li>Single-Arm Dumbbell Row</li><li>Seated Dumbbell Overhead Press</li><li>Bicep Curls & Tricep Pushdowns</li></ul></div>
+                    <div class="card p-6"><h3 class="font-bold text-lg mb-4">Lower Body (Wed)</h3><p class="text-sm mb-2 text-gray-500">3 sets of 10-15 reps. Avoid heavy spinal load.</p><ul class="list-disc list-inside space-y-1"><li>Goblet Squats</li><li>Walking Lunges</li><li>Leg Press (back flat)</li><li>Weighted Glute Bridges</li><li>Calf Raises</li></ul></div>
+                    <div class="card p-6"><h3 class="font-bold text-lg mb-4">Full Body (Fri)</h3><p class="text-sm mb-2 text-gray-500">3 rounds, 45s work / 15s rest.</p><ul class="list-disc list-inside space-y-1"><li>Goblet Squats</li><li>Push-ups (or Incline)</li><li>Alternating Lunges</li><li>Seated Cable Rows</li><li>Plank</li></ul></div>
+                </div>
+            </div>
+
+            <!-- Well-being -->
+            <div id="wellbeing" class="tab-content hidden">
+                <div class="section-title"><h2>Recovery & Well-Being Protocols</h2></div>
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-4">Breathing & Sleep</h3>
+                        <h4 class="font-semibold mb-2">Conscious Breathing (20 min nightly)</h4>
+                        <p class="mb-4">Focus on circular breathing: connect the inhale and exhale without any pause. This calms the nervous system and can reduce pain perception.</p>
+                        <h4 class="font-semibold mt-6 mb-2">Optimized Sleep Routine (9:30 PM - 5:30 AM)</h4>
+                        <ul class="list-disc list-inside space-y-1"><li><b>Environment:</b> Cool (18°C), completely dark, and quiet.</li><li><b>Wind-Down:</b> No screens for 60 mins before bed.</li><li><b>Consistency:</b> Maintain schedule even on weekends.</li></ul>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-4">Supplement Schedule</h3>
+                        <table class="w-full"><thead class="bg-gray-50"><tr><th class="p-3 text-left">Supplement</th><th class="p-3 text-left">Timing</th><th class="p-3 text-left">Rationale</th></tr></thead><tbody class="divide-y divide-gray-200"><tr><td class="p-3"><b>Vitamin D3, B12, Omega-3, Cranberry</b></td><td class="p-3">With Meal 1</td><td class="p-3 text-sm">Immunity, Energy, Anti-inflammatory</td></tr><tr><td class="p-3"><b>Magnesium Citrate</b></td><td class="p-3">Before Bed</td><td class="p-3 text-sm">Muscle relaxation & sleep quality</td></tr><tr><td class="p-3"><b>Melatonin (Optional)</b></td><td class="p-3">Before Bed</td><td class="p-3 text-sm">To reset sleep cycle if needed</td></tr></tbody></table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Career -->
+            <div id="career" class="tab-content hidden">
+                <div class="section-title"><h2>Global IT Leader Career Roadmap</h2></div>
+                <div class="card p-6">
+                    <h3 class="font-bold text-xl mb-4">12-Month GCP Certification Arc</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Months 1-2: Cloud Digital Leader</div>
+                                <p class="text-sm text-gray-600">Establish business foundation and articulate cloud value to build momentum.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Months 3-6: Associate Cloud Engineer</div>
+                                <p class="text-sm text-gray-600">Build technical credibility with hands-on deployment and management skills.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">Months 7-12: Professional Cloud Architect</div>
+                                <p class="text-sm text-gray-600">Elevate to strategist, designing high-level, robust, and scalable solutions.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Family -->
+            <div id="family" class="tab-content hidden">
+                <div class="section-title"><h2>Connected Family & Couple Plan</h2></div>
+                <div class="card p-6">
+                    <h3 class="font-bold text-xl mb-4">Flexible "Activity Menu"</h3>
+                    <p class="mb-4">Choose an activity together after dinner that fits the mood and energy level.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="p-4 bg-green-50 rounded-lg"><b class="font-semibold">Low-Energy</b><ul class="list-none mt-2 space-y-1 text-sm"><li>Read a book aloud</li><li>Listen to a podcast</li><li>Plan a vacation</li></ul></div>
+                        <div class="p-4 bg-yellow-50 rounded-lg"><b class="font-semibold">Medium-Energy</b><ul class="list-none mt-2 space-y-1 text-sm"><li>Neighborhood walk</li><li>Mini-yoga session</li><li>15-min dance party</li></ul></div>
+                        <div class="p-4 bg-blue-50 rounded-lg"><b class="font-semibold">Creative/Engaging</b><ul class="list-none mt-2 space-y-1 text-sm"><li>Board/card game</li><li>Jigsaw puzzle</li><li>Collaborative story</li></ul></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tracking -->
+            <div id="tracking" class="tab-content hidden">
+                <div class="section-title"><h2>Execution & Tracking System</h2></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-4">Weekly Reflection AI Coach</h3>
+                        <p class="mb-4">On Sunday, enter your reflections on the past week and get personalized feedback and encouragement.</p>
+                        <textarea id="weekly-reflection-input" class="w-full p-2 border rounded-lg" rows="4" placeholder="What went well? What was a challenge?"></textarea>
+                        <button id="get-feedback-btn" class="mt-2 w-full bg-[var(--success)] text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition duration-300">Get Feedback</button>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl mb-4">Digital Integration</h3>
+                        <p class="mb-4">Import your entire recurring schedule into your digital calendar with one click.</p>
+                        <button id="download-ics" class="w-full bg-[var(--primary)] text-white font-bold py-2 px-4 rounded-lg hover:bg-[var(--secondary)] transition duration-300">
+                            <i class="fas fa-calendar-alt mr-2"></i>Download .ics Calendar File
+                        </button>
+                        <p class="text-sm mt-4 text-gray-500"><b>Instructions:</b> Download the file, then import it into your Google, Outlook, or Apple calendar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+        
+    <!-- Print Button -->
+    <button onclick="window.print()" class="print-button bg-[var(--primary)] text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-[var(--secondary)] transition no-print">
+        <i class="fas fa-print"></i>
+    </button>
+    
+    <!-- Modal for API responses -->
+    <div id="modal" class="modal-overlay hidden no-print">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-2xl font-bold">Generated Ideas</h3>
+                <button onclick="closeModal()" class="text-2xl font-bold">&times;</button>
+            </div>
+            <div id="modal-body" class="prose"></div>
+        </div>
+    </div>
+
+    <script>
+        const seasonalData = {
+            Winter: { produce: "Apples, Pears, Beets, Cabbage, Carrots, Leeks, Potatoes, Squash, Sweet Potatoes, Greenhouse Veggies", protein: "Chicken, Turkey, Lean Beef, Pork, Cod, Salmon, Eggs", pantry: "Quinoa, Rice, Oats, Nuts, Seeds, Olive Oil, Low-sodium broths" },
+            Spring: { produce: "Asparagus, Rhubarb, Spinach, Radishes, Lettuce, Kale, Green Onions, Strawberries, Peas", protein: "Chicken, Turkey, Lean Beef, Pork, Cod, Salmon, Eggs", pantry: "Quinoa, Rice, Oats, Nuts, Seeds, Olive Oil, Low-sodium broths" },
+            Summer: { produce: "Berries, Peaches, Plums, Watermelon, Beans, Bell Peppers, Corn, Cucumbers, Tomatoes, Zucchini", protein: "Chicken, Turkey, Lean Beef, Pork, Cod, Salmon, Eggs (great for grilling)", pantry: "Quinoa, Rice, Oats, Nuts, Seeds, Olive Oil, Low-sodium broths" },
+            Fall: { produce: "Apples, Pears, Grapes, Broccoli, Brussels Sprouts, Cauliflower, Pumpkin, Squash, Root vegetables", protein: "Chicken, Turkey, Lean Beef, Pork, Cod, Salmon, Eggs (great for roasts)", pantry: "Quinoa, Rice, Oats, Nuts, Seeds, Olive Oil, Low-sodium broths" }
+        };
+        let currentSeason = 'Summer';
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        function showModal(title, content) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').innerHTML = content;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        async function callGemini(prompt, button) {
+            const originalButtonContent = button.innerHTML;
+            button.innerHTML = '<div class="loader mx-auto"></div>';
+            button.disabled = true;
+
+            const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+            const apiKey = "AIzaSyDt8C5DDP9PQO1v7KijZ4MhMFMFpquFBmg"; // Environment provides the key
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+                const result = await response.json();
+
+                if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    let htmlContent = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+                    showModal('AI Generated Ideas', htmlContent);
+                } else {
+                    showModal('Error', '<p>Sorry, I could not generate a response. Please try again.</p>');
+                }
+            } catch (error) {
+                console.error("API Call Error:", error);
+                showModal('Error', `<p>An error occurred: ${error.message}.</p>`);
+            } finally {
+                button.innerHTML = originalButtonContent;
+                button.disabled = false;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            
+            const month = today.getMonth();
+            if (month >= 2 && month <= 4) currentSeason = 'Spring';
+            else if (month >= 5 && month <= 7) currentSeason = 'Summer';
+            else if (month >= 8 && month <= 10) currentSeason = 'Fall';
+            else currentSeason = 'Winter';
+
+            const shoppingListContainer = document.getElementById('seasonal-shopping-list');
+            shoppingListContainer.innerHTML = `<h4 class="font-semibold text-lg mb-2">Current Season: ${currentSeason}</h4><div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm"><div><b class="text-[var(--primary)]">Produce:</b> ${seasonalData[currentSeason].produce}</div><div><b class="text-[var(--success)]">Protein:</b> ${seasonalData[currentSeason].protein}</div><div><b class="text-[var(--warning)]">Pantry:</b> ${seasonalData[currentSeason].pantry}</div></div>`;
+
+            const quotes = ["The secret of your future is hidden in your daily routine.", "Discipline is the bridge between goals and accomplishment.", "Success is the sum of small efforts, repeated day in and day out."];
+            document.getElementById('motivational-quote').textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+
+            const checklistItems = ["5:30 AM Wake-up", "AM Gym Session", "3.5L+ Water", "20 min Breathing", "9:30 PM Sleep", "Family Activity", "GCP Study"];
+            const checklistContainer = document.getElementById('daily-checklist');
+            checklistItems.forEach(item => { checklistContainer.innerHTML += `<li class="flex items-center"><input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)] mr-3"><span>${item}</span></li>`; });
+            
+            const supplements = ["Vitamin D", "B12", "Omega-3", "Cranberry", "Magnesium"];
+            const supplementContainer = document.getElementById('supplement-tracker');
+            supplements.forEach(item => { supplementContainer.innerHTML += `<div class="flex items-center justify-between"><span>${item}</span><input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]"></div>`; });
+
+            document.getElementById('water-tracker').addEventListener('input', (e) => { document.getElementById('water-level').textContent = `${parseFloat(e.target.value).toFixed(2)} L`; });
+
+            document.getElementById('generate-recipes-btn').addEventListener('click', (e) => {
+                const ingredients = `Produce: ${seasonalData[currentSeason].produce}. Protein: ${seasonalData[currentSeason].protein}. Pantry: ${seasonalData[currentSeason].pantry}.`;
+                const prompt = `I am a 44-year-old male with left-leg sciatica and a history of ulcers. My diet is low-FODMAP, low-salt, and low-sugar. My wife needs iron-rich and healthy-fat options for anemia/cholesterol. My kids are picky eaters with ADHD. Based on these current seasonal ingredients from Ontario (${ingredients}), generate 2 simple dinner recipes. For each recipe, provide: 1. The main recipe for me. 2. A simple "add-on" for my wife. 3. A "deconstructed" serving suggestion for my kids. Format the response clearly with headings.`;
+                callGemini(prompt, e.currentTarget);
+            });
+
+            document.getElementById('get-feedback-btn').addEventListener('click', (e) => {
+                const reflection = document.getElementById('weekly-reflection-input').value;
+                if (!reflection.trim()) { showModal('Input Required', '<p>Please enter your weekly reflection first.</p>'); return; }
+                const prompt = `I am a 44-year-old IT Manager working on a detailed life plan. My goals include managing sciatica, losing weight, getting GCP certified, and improving family connection. Here is my reflection for the week: "${reflection}". Act as a supportive but firm AI coach. Provide brief, actionable feedback. Give me one piece of encouragement and one concrete suggestion for the upcoming week based on my reflection and goals. Keep it concise.`;
+                callGemini(prompt, e.currentTarget);
+            });
+
+            document.getElementById('download-ics').addEventListener('click', function() {
+                const cal = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//MasterLifePlan//EN',
+                    'BEGIN:VEVENT', 'DTSTART;TZID=America/Toronto:20250101T053000', 'RRULE:FREQ=DAILY;COUNT=365', 'SUMMARY:Wake Up & Hydrate', 'END:VEVENT',
+                    'BEGIN:VEVENT', 'DTSTART;TZID=America/Toronto:20250101T193000', 'RRULE:FREQ=DAILY;COUNT=365', 'SUMMARY:Conscious Breathing (20 min)', 'END:VEVENT',
+                    'BEGIN:VEVENT', 'DTSTART;TZID=America/Toronto:20250101T070000', 'RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;COUNT=260', 'SUMMARY:AM Gym: Elliptical, Core, Stretch', 'END:VEVENT',
+                    'BEGIN:VEVENT', 'DTSTART;TZID=America/Toronto:20250101T074500', 'RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;COUNT=260', 'SUMMARY:GCP Study Block 1', 'END:VEVENT',
+                    'BEGIN:VEVENT', 'DTSTART;TZID=America/Toronto:20250101T121500', 'RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;COUNT=260', 'SUMMARY:GCP Study Block 2 (Lunch)', 'END:VEVENT',
+                    'BEGIN:VEVENT', 'DTSTART;TZID=America/Toronto:20250101T200000', 'RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;COUNT=260', 'SUMMARY:GCP Study Block 3', 'END:VEVENT',
+                    'BEGIN:VEVENT', 'DTSTART;TZID=America/Toronto:20250106T170000', 'RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=52', 'SUMMARY:Weightlifting: Upper Body', 'END:VEVENT',
+                    'BEGIN:VEVENT', 'DTSTART;TZID=America/Toronto:20250108T170000', 'RRULE:FREQ=WEEKLY;BYDAY=WE;COUNT=52', 'SUMMARY:Weightlifting: Lower Body', 'END:VEVENT',
+                    'BEGIN:VEVENT', 'DTSTART;TZID=America/Toronto:20250110T170000', 'RRULE:FREQ=WEEKLY;BYDAY=FR;COUNT=52', 'SUMMARY:Weightlifting: Full-Body Circuit', 'END:VEVENT',
+                    'BEGIN:VEVENT', 'DTSTART;TZID=America/Toronto:20250104T100000', 'RRULE:FREQ=WEEKLY;BYDAY=SA;COUNT=52', 'SUMMARY:Pilates / Yoga Session', 'END:VEVENT',
+                    'BEGIN:VEVENT', 'DTSTART;TZID=America/Toronto:20250105T160000', 'RRULE:FREQ=WEEKLY;BYDAY=SU;COUNT=52', 'SUMMARY:Meal Prep & Weekly Reflection', 'END:VEVENT',
+                    'END:VCALENDAR'
+                ].join('\\n');
+                const blob = new Blob([cal], { type: 'text/calendar;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'Master_Life_Plan_2025.ics';
+                link.click();
+                URL.revokeObjectURL(link.href);
+            });
+        });
+    </script>
+</body>
+</html>
