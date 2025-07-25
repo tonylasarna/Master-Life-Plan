@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="module" src="assets/js/app.js"></script>
     <style>
         :root {
             /* Colors - WCAG AA compliant */
@@ -766,31 +767,23 @@
 
         // Global functions needed by HTML
         window.showTab = function(tabId) {
-            // Hide all tab panels first
+            // Update tab panel visibility and accessibility
             document.querySelectorAll('.tab-content').forEach(panel => {
-                panel.classList.add('hidden');
-                panel.setAttribute('aria-hidden', 'true');
+                const isSelected = panel.id === tabId;
+                panel.classList.toggle('hidden', !isSelected);
+                panel.setAttribute('aria-hidden', !isSelected);
+                panel.setAttribute('role', 'tabpanel');
+                panel.setAttribute('aria-labelledby', `${tabId}-tab`);
+                panel.setAttribute('tabindex', isSelected ? '0' : '-1');
             });
-            
-            // Show the selected tab panel
-            const selectedPanel = document.getElementById(tabId);
-            if (selectedPanel) {
-                selectedPanel.classList.remove('hidden');
-                selectedPanel.setAttribute('aria-hidden', 'false');
-            }
-            
+
             // Update tab button states
             document.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('active');
-                button.setAttribute('aria-selected', 'false');
+                const isSelected = button.id === `${tabId}-tab`;
+                button.classList.toggle('active', isSelected);
+                button.setAttribute('aria-selected', isSelected);
+                button.setAttribute('tabindex', isSelected ? '0' : '-1');
             });
-            
-            // Activate the selected tab button
-            const selectedTab = document.getElementById(`${tabId}-tab`);
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-                selectedTab.setAttribute('aria-selected', 'true');
-            }
         };
 
         // Create live region for accessibility announcements if it doesn't exist
