@@ -374,20 +374,28 @@
             mobileMenuButton.addEventListener('click', function() {
                 const isExpanded = this.getAttribute('aria-expanded') === 'true';
                 this.setAttribute('aria-expanded', !isExpanded);
-                animationUtils.slideDown(mainNavLinks);
+                mainNavLinks.classList.toggle('show');
+                
+                if (isExpanded) {
+                    mainNavLinks.style.display = 'none';
+                } else {
+                    mainNavLinks.style.display = 'flex';
+                }
             });
 
             document.addEventListener('click', function(event) {
                 if (!event.target.closest('.main-nav') && mainNavLinks.classList.contains('show')) {
                     mobileMenuButton.setAttribute('aria-expanded', 'false');
-                    animationUtils.slideUp(mainNavLinks);
+                    mainNavLinks.classList.remove('show');
+                    mainNavLinks.style.display = 'none';
                 }
             });
 
             mainNavLinks.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape' && mainNavLinks.classList.contains('show')) {
                     mobileMenuButton.setAttribute('aria-expanded', 'false');
-                    animationUtils.slideUp(mainNavLinks);
+                    mainNavLinks.classList.remove('show');
+                    mainNavLinks.style.display = 'none';
                     mobileMenuButton.focus();
                 }
             });
@@ -758,40 +766,31 @@
 
         // Global functions needed by HTML
         window.showTab = function(tabId) {
-            // Update tab panel visibility
+            // Hide all tab panels first
             document.querySelectorAll('.tab-content').forEach(panel => {
-                const isSelected = panel.id === tabId;
-                panel.classList.toggle('hidden', !isSelected);
-                panel.setAttribute('aria-hidden', !isSelected);
-                panel.setAttribute('role', 'tabpanel');
-                panel.setAttribute('aria-labelledby', `${tabId}-tab`);
-                
-                // Ensure proper focus management
-                if (isSelected) {
-                    panel.setAttribute('tabindex', '0');
-                    // If the panel was activated via keyboard, move focus to the panel
-                    if (event.type === 'keydown') {
-                        panel.focus();
-                    }
-                } else {
-                    panel.setAttribute('tabindex', '-1');
-                }
+                panel.classList.add('hidden');
+                panel.setAttribute('aria-hidden', 'true');
             });
-
+            
+            // Show the selected tab panel
+            const selectedPanel = document.getElementById(tabId);
+            if (selectedPanel) {
+                selectedPanel.classList.remove('hidden');
+                selectedPanel.setAttribute('aria-hidden', 'false');
+            }
+            
             // Update tab button states
             document.querySelectorAll('.tab-button').forEach(button => {
-                const isSelected = button.id === `${tabId}-tab`;
-                button.classList.toggle('active', isSelected);
-                button.setAttribute('aria-selected', isSelected);
-                button.setAttribute('tabindex', isSelected ? '0' : '-1');
+                button.classList.remove('active');
+                button.setAttribute('aria-selected', 'false');
             });
-
-            // Save current tab to storage
-            storageManager.saveData(APP_CONSTANTS.STORAGE_KEYS.CURRENT_TAB, tabId);
-
-            // Announce tab change to screen readers
-            const liveRegion = document.getElementById('a11y-announce') || createLiveRegion();
-            liveRegion.textContent = `${tabId} tab selected`;
+            
+            // Activate the selected tab button
+            const selectedTab = document.getElementById(`${tabId}-tab`);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+                selectedTab.setAttribute('aria-selected', 'true');
+            }
         };
 
         // Create live region for accessibility announcements if it doesn't exist
@@ -813,6 +812,46 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize UI Components
             UIController.init();
+            
+            // Initialize daily checklist
+            const dailyChecklist = [
+                { id: 'water', text: 'Track Water Intake (3.5-4.0L)', category: 'health' },
+                { id: 'supplements', text: 'Take Morning Supplements', category: 'health' },
+                { id: 'exercise', text: 'Complete Daily Exercise', category: 'health' },
+                { id: 'gcp-study', text: 'GCP Study Blocks (3x)', category: 'learning' },
+                { id: 'breathing', text: 'Evening Breathing Session', category: 'wellbeing' },
+                { id: 'family', text: 'Quality Family Time', category: 'family' }
+            ];
+            
+            const checklistContainer = document.getElementById('daily-checklist');
+            if (checklistContainer) {
+                dailyChecklist.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg transition-colors';
+                    li.innerHTML = `
+                        <input type="checkbox" id="${item.id}" class="form-checkbox h-5 w-5 text-[var(--primary)] rounded border-gray-300 focus:ring-[var(--primary)]">
+                        <label for="${item.id}" class="flex-1 cursor-pointer">
+                            ${item.text}
+                            <span class="tag tag-${item.category} ml-2 text-xs">${item.category}</span>
+                        </label>
+                    `;
+                    checklistContainer.appendChild(li);
+                });
+                
+                // Add event listeners to save checkbox states
+                checklistContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    // Load saved state
+                    const savedState = localStorage.getItem(`checklist-${checkbox.id}`);
+                    if (savedState === 'true') {
+                        checkbox.checked = true;
+                    }
+                    
+                    // Save state on change
+                    checkbox.addEventListener('change', function() {
+                        localStorage.setItem(`checklist-${this.id}`, this.checked);
+                    });
+                });
+            }
 
             // Set up event listeners for recipe generation
             document.getElementById('generate-recipes-btn').addEventListener('click', (e) => {
