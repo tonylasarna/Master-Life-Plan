@@ -1,21 +1,220 @@
 import { themeManager, storageManager, eventManager, animationUtils } from './utils.js';
 import { STORAGE_KEYS, TAB_IDS, EVENT_TYPES, STATUS_TYPES, THEME_TYPES } from './constants.js';
 
-// Initialize App
-document.addEventListener('DOMContentLoaded', () => {
-    initializeApp();
-    setupEventListeners();
-});
+export const UIController = {
+    init() {
+        this.initMobileMenu();
+        this.initTabs();
+        this.initTheme();
+        this.initDailyChecklist();
+        this.initWaterTracker();
+        this.initSupplements();
+        this.initCurrentDate();
+    },
 
-// App Initialization
-function initializeApp() {
-    themeManager.initTheme();
-    loadTasks();
-    loadHabits();
-    loadGoals();
-    initializeTabs();
-    setupHamburgerMenu();
-}
+    initMobileMenu() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mainNavLinks = document.getElementById('main-nav-links');
+        
+        if (mobileMenuButton && mainNavLinks) {
+            mobileMenuButton.addEventListener('click', function() {
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                this.setAttribute('aria-expanded', !isExpanded);
+                mainNavLinks.classList.toggle('show');
+                mainNavLinks.style.display = isExpanded ? 'none' : 'flex';
+            });
+
+            // Close menu on outside click
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.main-nav') && mainNavLinks.classList.contains('show')) {
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                    mainNavLinks.classList.remove('show');
+                    mainNavLinks.style.display = 'none';
+                }
+            });
+
+            // Close menu on Escape key
+            mainNavLinks.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && mainNavLinks.classList.contains('show')) {
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                    mainNavLinks.classList.remove('show');
+                    mainNavLinks.style.display = 'none';
+                    mobileMenuButton.focus();
+                }
+            });
+        }
+    },
+
+    initTabs() {
+        const defaultTab = 'dashboard';
+        this.showTab(defaultTab);
+
+        // Set up keyboard navigation for tabs
+        const tabList = document.querySelector('[role="tablist"]');
+        const tabs = tabList?.querySelectorAll('[role="tab"]');
+        if (tabList && tabs) {
+            const tabIds = Array.from(tabs).map(tab => tab.id.replace('-tab', ''));
+
+            tabList.addEventListener('keydown', (e) => {
+                const targetTab = e.target.closest('[role="tab"]');
+                if (!targetTab) return;
+
+                let currentIndex = tabIds.indexOf(targetTab.id.replace('-tab', ''));
+                let nextIndex;
+
+                switch (e.key) {
+                    case 'ArrowLeft':
+                        nextIndex = currentIndex - 1;
+                        if (nextIndex < 0) nextIndex = tabIds.length - 1;
+                        e.preventDefault();
+                        break;
+                    case 'ArrowRight':
+                        nextIndex = currentIndex + 1;
+                        if (nextIndex >= tabIds.length) nextIndex = 0;
+                        e.preventDefault();
+                        break;
+                    case 'Home':
+                        nextIndex = 0;
+                        e.preventDefault();
+                        break;
+                    case 'End':
+                        nextIndex = tabIds.length - 1;
+                        e.preventDefault();
+                        break;
+                    default:
+                        return;
+                }
+
+                const nextTab = document.getElementById(`${tabIds[nextIndex]}-tab`);
+                if (nextTab) {
+                    nextTab.focus();
+                    this.showTab(tabIds[nextIndex]);
+                }
+            });
+        }
+    },
+
+    showTab(tabId) {
+        // Update tab panel visibility and accessibility
+        document.querySelectorAll('.tab-content').forEach(panel => {
+            const isSelected = panel.id === tabId;
+            panel.classList.toggle('hidden', !isSelected);
+            panel.setAttribute('aria-hidden', !isSelected);
+            panel.setAttribute('role', 'tabpanel');
+            panel.setAttribute('aria-labelledby', `${tabId}-tab`);
+            panel.setAttribute('tabindex', isSelected ? '0' : '-1');
+        });
+
+        // Update tab button states
+        document.querySelectorAll('.tab-button').forEach(button => {
+            const isSelected = button.id === `${tabId}-tab`;
+            button.classList.toggle('active', isSelected);
+            button.setAttribute('aria-selected', isSelected);
+            button.setAttribute('tabindex', isSelected ? '0' : '-1');
+        });
+
+        // Save current tab
+        storageManager.saveData(STORAGE_KEYS.CURRENT_TAB, tabId);
+    },
+
+    initTheme() {
+        themeManager.initTheme();
+        const savedTheme = storageManager.getData(STORAGE_KEYS.THEME) || 'dark';
+        themeManager.setTheme(savedTheme);
+    },
+
+    initDailyChecklist() {
+        const items = [
+            { id: 'hydration', text: 'Track Water Intake (3.5-4.0L)', category: 'health' },
+            { id: 'supplements', text: 'Take Morning Supplements', category: 'health' },
+            { id: 'exercise', text: 'Complete Scheduled Workout', category: 'health' },
+            { id: 'study', text: 'GCP Study Session (30 mins)', category: 'career' },
+            { id: 'breathing', text: 'Evening Breathing Practice', category: 'wellbeing' },
+            { id: 'family', text: 'Family Activity Time', category: 'family' }
+        ];
+
+        const container = document.getElementById('daily-checklist');
+        if (container) {
+            items.forEach(item => {
+                const checked = storageManager.getData(`checklist_${item.id}`) || false;
+                const li = document.createElement('li');
+                li.className = 'flex items-center space-x-3';
+                li.innerHTML = `
+                    <input type="checkbox" id="${item.id}" 
+                           class="form-checkbox h-5 w-5 text-[var(--primary)]"
+                           ${checked ? 'checked' : ''}>
+                    <label for="${item.id}" class="flex-1">${item.text}</label>
+                `;
+                container.appendChild(li);
+
+                const checkbox = li.querySelector('input');
+                checkbox.addEventListener('change', () => {
+                    storageManager.saveData(`checklist_${item.id}`, checkbox.checked);
+                });
+            });
+        }
+    },
+
+    initWaterTracker() {
+        const waterTracker = document.getElementById('water-tracker');
+        const waterLevel = document.getElementById('water-level');
+        if (waterTracker && waterLevel) {
+            const savedLevel = storageManager.getData(STORAGE_KEYS.WATER_LEVEL) || 0;
+            waterTracker.value = savedLevel;
+            waterLevel.textContent = savedLevel.toFixed(2) + ' L';
+
+            waterTracker.addEventListener('input', function() {
+                const value = parseFloat(this.value);
+                waterLevel.textContent = value.toFixed(2) + ' L';
+                storageManager.saveData(STORAGE_KEYS.WATER_LEVEL, value);
+            });
+        }
+    },
+
+    initSupplements() {
+        const supplements = [
+            { id: 'vit-d', name: 'Vitamin D3' },
+            { id: 'b12', name: 'B12' },
+            { id: 'omega', name: 'Omega-3' },
+            { id: 'cranberry', name: 'Cranberry' },
+            { id: 'magnesium', name: 'Magnesium Citrate' }
+        ];
+
+        const container = document.getElementById('supplement-tracker');
+        if (container) {
+            supplements.forEach(supp => {
+                const checked = storageManager.getData(`supplement_${supp.id}`) || false;
+                const div = document.createElement('div');
+                div.className = 'flex items-center space-x-3';
+                div.innerHTML = `
+                    <input type="checkbox" id="${supp.id}"
+                           class="form-checkbox h-5 w-5 text-[var(--primary)]"
+                           ${checked ? 'checked' : ''}>
+                    <label for="${supp.id}" class="flex-1">${supp.name}</label>
+                `;
+                container.appendChild(div);
+
+                const checkbox = div.querySelector('input');
+                checkbox.addEventListener('change', () => {
+                    storageManager.saveData(`supplement_${supp.id}`, checkbox.checked);
+                });
+            });
+        }
+    },
+
+    initCurrentDate() {
+        const currentDateEl = document.getElementById('currentDate');
+        if (currentDateEl) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            currentDateEl.textContent = new Date().toLocaleDateString('en-US', options);
+        }
+    }
+};
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    UIController.init();
+});
 
 // Event Listeners Setup
 function setupEventListeners() {
