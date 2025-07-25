@@ -2568,20 +2568,24 @@ END:VCALENDAR`;
 
             initializeElements() {
                 try {
-                    this.calendar = document.getElementById('calendarPreview');
-                    this.prevButton = this.calendar?.querySelector('.prev-month');
-                    this.nextButton = this.calendar?.querySelector('.next-month');
-                    this.monthDisplay = this.calendar?.querySelector('.current-month');
-                    this.datesGrid = this.calendar?.querySelector('.calendar-dates');
+                    // Find elements within the tracking-grid
+                    const trackingGrid = document.querySelector('.tracking-grid');
+                    this.prevButton = trackingGrid?.querySelector('.prev-month');
+                    this.nextButton = trackingGrid?.querySelector('.next-month');
+                    this.monthDisplay = trackingGrid?.querySelector('.current-month');
+                    this.datesGrid = trackingGrid?.querySelector('.calendar-dates');
                     this.syncButton = document.getElementById('syncCalendar');
 
                     this.elementsExist = !!(
-                        this.calendar &&
                         this.prevButton &&
                         this.nextButton &&
                         this.monthDisplay &&
                         this.datesGrid
                     );
+                    
+                    if (!this.elementsExist) {
+                        console.warn('Calendar elements not found. Check HTML structure.');
+                    }
                 } catch (error) {
                     console.error('Error initializing calendar elements:', error);
                     this.elementsExist = false;
@@ -2674,7 +2678,19 @@ END:VCALENDAR`;
             selectDate(date) {
                 this.selectedDate = date;
                 this.render();
-                this.calendar.dispatchEvent(new CustomEvent('dateSelected', { detail: date }));
+                // Dispatch event on the actual calendar element
+                this.datesGrid.closest('.tracking-grid').dispatchEvent(new CustomEvent('dateSelected', { detail: date }));
+                
+                // Update visual selection
+                const dateElements = this.datesGrid.querySelectorAll('.calendar-date');
+                dateElements.forEach(el => el.classList.remove('active'));
+                
+                // Find and highlight the selected date
+                const selectedEl = Array.from(dateElements).find(el => 
+                    parseInt(el.textContent) === date.getDate() && 
+                    !el.classList.contains('other-month')
+                );
+                if (selectedEl) selectedEl.classList.add('active');
             }
 
             async syncWithGoogleCalendar() {
