@@ -3,8 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master Life Plan 2025 - A comprehensive planning dashboard for health, career, and family success">
+    <meta name="theme-color" content="#2563eb">
+    
+    <!-- Accessibility Meta Tags -->
+    <meta name="application-name" content="Master Life Plan">
+    <meta name="apple-mobile-web-app-title" content="Master Life Plan">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    
     <title>Master Life Plan 2025 | 44-Year-Old Professional</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    
+    <!-- Base Accessibility Styles -->
+    <style>
+        :root {
+            /* Color variables with proper contrast ratios */
+            --primary: #2563eb;
+            --primary-light: #60a5fa;
+            --primary-dark: #1e40af;
+            --secondary: #0ea5e9;
+            --accent: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            
+            /* Focus state styles */
+            --focus-ring-color: #3b82f6;
+            --focus-ring-width: 0.25rem;
+            
+            /* Spacing and sizing */
+            --spacing-unit: 0.25rem;
+            --container-max-width: 75rem;
+            --header-height: 4rem;
+            
+            /* Font sizes using relative units */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            
+            /* Animation timings */
+            --transition-fast: 150ms;
+            --transition-normal: 300ms;
+            --transition-slow: 500ms;
+        }
+
+        /* Base focus styles */
+        *:focus-visible {
+            outline: var(--focus-ring-width) solid var(--focus-ring-color);
+            outline-offset: 0.125rem;
+        }
+
+        /* Skip to main content link */
+        .skip-to-main {
+            position: fixed;
+            top: -100%;
+            left: 0;
+            z-index: 1000;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            transition: top var(--transition-normal);
+        }
+
+        .skip-to-main:focus {
+            top: 0;
+        }
+
+        /* Base responsive typography */
+        html {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (forced-colors: active) {
+            * {
+                border-color: currentColor;
+            }
+        }
+    </style>
+    
+    <!-- Core Styles -->
     <style>
         :root {
             --primary: #2563eb;
@@ -546,35 +643,92 @@
         }
         
         .calendar-preview {
-            background: linear-gradient(135deg, #f0f7ff, #e6f7ff);
-            border-radius: 10px;
-            padding: 15px;
-            font-family: monospace;
-            text-align: center;
-            margin-top: 15px;
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
         }
         
-        .calendar-header {
-            font-weight: bold;
-            margin-bottom: 10px;
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .calendar-nav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
             color: var(--primary);
+            transition: all var(--transition-normal);
         }
-        
+
+        .calendar-nav-btn:hover {
+            background-color: var(--light-gray);
+        }
+
+        .calendar-nav-btn:focus-visible {
+            outline: var(--focus-ring-width) solid var(--focus-ring-color);
+            outline-offset: 0.125rem;
+        }
+
+        .current-month {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .calendar-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
         .calendar-days {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--gray);
+            font-size: var(--text-sm);
         }
-        
-        .calendar-day {
-            padding: 8px;
-            border-radius: 5px;
-            background: rgba(255,255,255,0.8);
+
+        .calendar-dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.25rem;
         }
-        
-        .calendar-day.active {
-            background: var(--primary);
+
+        .calendar-date {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 0.25rem;
+            font-size: var(--text-sm);
+            transition: all var(--transition-normal);
+        }
+
+        .calendar-date:hover {
+            background-color: var(--light-gray);
+        }
+
+        .calendar-date.active {
+            background-color: var(--primary);
             color: white;
+        }
+
+        .calendar-date.today {
+            border: 0.125rem solid var(--primary);
+        }
+
+        .calendar-date.other-month {
+            color: var(--gray);
+            opacity: 0.5;
         }
         
         .quote-container {
@@ -635,40 +789,169 @@
     </style>
 </head>
 <body>
+    <!-- Skip to main content link -->
+    <a href="#main-content" class="skip-to-main">Skip to main content</a>
+
     <!-- Site Navigation Menu -->
-    <nav style="background: white; box-shadow: var(--card-shadow); position: sticky; top: 0; z-index: 150; padding: 1rem 0;">
-        <div class="container" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-            <a href="Mixed-Gemini-DeepSeek.html" class="nav-link">Gemini+DeepSeek (Dashboard)</a>
-            <a href="ChatGPT-Version.html" class="nav-link">ChatGPT Version</a>
-            <a href="DeepSeek-Versio.html" class="nav-link active">DeepSeek Version</a>
-            <a href="Google-version-Home.html" class="nav-link">Google Version</a>
-            <a href="ChatGPT+Gemini+DeepSeek.html" class="nav-link">ChatGPT+Gemini+DeepSeek</a>
+    <nav class="main-nav" role="navigation" aria-label="Main navigation">
+        <div class="container nav-container">
+            <button class="hamburger-menu" 
+                    aria-label="Toggle navigation menu" 
+                    aria-expanded="false"
+                    aria-controls="primary-navigation">
+                <span class="hamburger-line" aria-hidden="true"></span>
+                <span class="hamburger-line" aria-hidden="true"></span>
+                <span class="hamburger-line" aria-hidden="true"></span>
+            </button>
+            
+            <div class="nav-links-container" id="primary-navigation">
+                <a href="Mixed-Gemini-DeepSeek.html" class="nav-link" aria-current="page">
+                    <span class="nav-text">Gemini+DeepSeek</span>
+                    <span class="nav-description">Dashboard</span>
+                </a>
+                <a href="ChatGPT-Version.html" class="nav-link">
+                    <span class="nav-text">ChatGPT Version</span>
+                </a>
+                <a href="DeepSeek-Versio.html" class="nav-link active" aria-current="page">
+                    <span class="nav-text">DeepSeek Version</span>
+                </a>
+                <a href="Google-version-Home.html" class="nav-link">
+                    <span class="nav-text">Google Version</span>
+                </a>
+                <a href="ChatGPT+Gemini+DeepSeek.html" class="nav-link">
+                    <span class="nav-text">ChatGPT+Gemini+DeepSeek</span>
+                </a>
+            </div>
         </div>
     </nav>
 
+    <!-- Core Styles -->
     <style>
+        /* Core Layout & Navigation */
+        .main-nav {
+            background: white;
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 150;
+            padding: var(--spacing-unit) 0;
+            min-height: var(--header-height);
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 var(--spacing-unit);
+        }
+
+        /* Hamburger Menu Component */
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 3rem;
+            height: 2.25rem;
+            background: transparent;
+            border: 0.125rem solid transparent;
+            cursor: pointer;
+            padding: 0.5rem;
+            position: absolute;
+            left: var(--spacing-unit);
+            z-index: 10;
+            transition: all var(--transition-normal);
+            border-radius: 0.375rem;
+        }
+
+        .hamburger-menu:hover {
+            background-color: var(--light-gray);
+        }
+
+        .hamburger-menu:focus-visible {
+            border-color: var(--focus-ring-color);
+            outline: none;
+        }
+
+        [aria-expanded="true"] {
+            background-color: var(--light-gray);
+        }
+
+        .hamburger-line {
+            width: 100%;
+            height: 0.1875rem;
+            background-color: var(--primary);
+            border-radius: 0.1875rem;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        /* Navigation Links */
+        .nav-links-container {
+            display: flex;
+            justify-content: center;
+            gap: clamp(1rem, 2vw, 2rem);
+            flex-wrap: wrap;
+            transition: all var(--transition-normal);
+        }
+
         .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-decoration: none;
             color: var(--dark);
             font-weight: 600;
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            font-size: var(--text-base);
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            transition: all var(--transition-normal);
             position: relative;
+            min-width: 7rem;
+            text-align: center;
+        }
+
+        .nav-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-description {
+            font-size: var(--text-xs);
+            color: var(--gray);
+            margin-top: 0.25rem;
         }
 
         .nav-link::after {
             content: '';
             position: absolute;
-            bottom: -4px;
+            bottom: 0;
             left: 0;
             width: 100%;
-            height: 3px;
+            height: 0.1875rem;
             background: linear-gradient(to right, var(--primary), var(--secondary));
-            border-radius: 2px;
+            border-radius: 0.125rem;
             transform: scaleX(0);
-            transition: transform 0.3s ease;
+            transition: transform var(--transition-normal);
+            transform-origin: center;
+        }
+
+        /* Improve touch targets on mobile */
+        @media (hover: none) {
+            .nav-link {
+                padding: 1rem;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (forced-colors: active) {
+            .nav-link::after {
+                background: ButtonText;
+            }
         }
 
         .nav-link:hover {
@@ -688,18 +971,157 @@
             transform: scaleX(1);
         }
 
-        @media (max-width: 768px) {
-            nav .container {
-                gap: 1rem;
-                padding: 0 1rem;
+        /* Responsive Design */
+        @media (hover: hover) {
+            .nav-link:hover {
+                transform: translateY(-2px);
             }
-            
+        }
+
+        @media (max-width: 768px) {
+            /* Navigation */
+            .hamburger-menu {
+                display: flex;
+            }
+
+            .nav-links-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: min(80vw, 20rem);
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                padding: clamp(2rem, 5vh, 5rem) 1.5rem 2rem;
+                gap: 1.5rem;
+                box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+                transform: translateX(-100%);
+                transition: transform var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 5;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .nav-links-container.active {
+                transform: translateX(0);
+            }
+
             .nav-link {
-                font-size: 0.9rem;
-                padding: 0.4rem 0.8rem;
+                font-size: var(--text-lg);
+                padding: 1rem;
+                width: 100%;
+                text-align: left;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.75rem;
+                border-radius: 0.5rem;
+            }
+
+            .nav-description {
+                margin-top: 0;
+                margin-left: auto;
+                color: var(--gray);
+            }
+
+            /* Improved touch feedback */
+            .nav-link:active {
+                background-color: var(--light-gray);
+                transform: scale(0.98);
+            }
+
+            /* Focus visible improvements */
+            .nav-link:focus-visible {
+                outline: 0.25rem solid var(--focus-ring-color);
+                outline-offset: -0.25rem;
+            }
+
+            /* Enhanced Hamburger Animation */
+            .hamburger-menu.active {
+                transform: rotate(180deg);
+            }
+
+            .hamburger-menu.active span:first-child {
+                transform: translateY(0.5rem) rotate(45deg);
+            }
+
+            .hamburger-menu.active span:nth-child(2) {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+
+            .hamburger-menu.active span:last-child {
+                transform: translateY(-0.5rem) rotate(-45deg);
             }
         }
     </style>
+
+    <!-- Hamburger Menu JavaScript -->
+    <script>
+        /**
+         * Navigation Manager - Handles mobile navigation functionality
+         */
+        class NavigationManager {
+            constructor() {
+                this.hamburger = document.querySelector('.hamburger-menu');
+                this.navContainer = document.querySelector('.nav-links-container');
+                this.overlay = this.createOverlay();
+                this.isMenuOpen = false;
+
+                this.init();
+            }
+
+            createOverlay() {
+                const overlay = document.createElement('div');
+                overlay.classList.add('nav-overlay');
+                document.body.appendChild(overlay);
+                return overlay;
+            }
+
+            toggleMenu = () => {
+                this.isMenuOpen = !this.isMenuOpen;
+                this.hamburger.classList.toggle('active', this.isMenuOpen);
+                this.navContainer.classList.toggle('active', this.isMenuOpen);
+                this.overlay.classList.toggle('active', this.isMenuOpen);
+                document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
+            }
+
+            handleEscapeKey = (event) => {
+                if (event.key === 'Escape' && this.isMenuOpen) {
+                    this.toggleMenu();
+                }
+            }
+
+            init() {
+                // Event listeners
+                this.hamburger.addEventListener('click', this.toggleMenu);
+                this.overlay.addEventListener('click', this.toggleMenu);
+                document.addEventListener('keydown', this.handleEscapeKey);
+
+                // Close menu when clicking links
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (this.isMenuOpen) this.toggleMenu();
+                    });
+                });
+
+                // Add resize handler with debounce
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        if (window.innerWidth > 768 && this.isMenuOpen) {
+                            this.toggleMenu();
+                        }
+                    }, 250);
+                });
+            }
+        }
+
+        // Initialize navigation when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new NavigationManager();
+        });
+    </script>
     <header>
         <div class="header-content">
             <h1>Master Life Plan 2025</h1>
@@ -859,6 +1281,7 @@
                                 <p>Baked salmon + quinoa + steamed carrots/zucchini</p>
                             </div>
                             
+
                             <div class="meal-card">
                                 <div class="meal-title">
                                     <h4>Meal 2 (6:00 PM)</h4>
@@ -867,6 +1290,7 @@
                                 <p>Turkey meatballs (low-tomato sauce) + gluten-free pasta + spinach salad</p>
                             </div>
                             
+
                             <div class="meal-card">
                                 <div class="meal-title">
                                     <h4>Optional Snack</h4>
@@ -901,6 +1325,7 @@
                                 </ul>
                             </div>
                             
+
                             <div class="shopping-category">
                                 <h4>Proteins</h4>
                                 <ul>
@@ -911,6 +1336,7 @@
                                 </ul>
                             </div>
                             
+
                             <div class="shopping-category">
                                 <h4>Pantry</h4>
                                 <ul>
@@ -1290,17 +1716,29 @@
                     </div>
                     
                     <!-- Calendar Preview -->
-                    <div class="calendar-preview">
-                        <div class="calendar-nav">
-                            <button id="prevMonth" class="calendar-nav-btn"><i class="fas fa-chevron-left"></i></button>
-                            <div class="calendar-header">July 2025</div>
-                            <button id="nextMonth" class="calendar-nav-btn"><i class="fas fa-chevron-right"></i></button>
-                        </div>
-                        <div class="calendar-grid">
-                            <div class="calendar-days"></div>
-                            <div class="calendar-dates"></div>
-                        </div>
-                    </div>
+                    <div class="calendar-preview" id="calendarPreview">
+    <div class="calendar-nav">
+        <button class="calendar-nav-btn prev-month" aria-label="Previous month">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <h3 class="current-month">July 2025</h3>
+        <button class="calendar-nav-btn next-month" aria-label="Next month">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+    <div class="calendar-grid">
+        <div class="calendar-days">
+            <span>Sun</span>
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+        </div>
+        <div class="calendar-dates"></div>
+    </div>
+</div>
 
                     <!-- Calendar Integration Options -->
                     <div class="calendar-actions">
@@ -1370,37 +1808,47 @@
                     .calendar-nav-btn {
                         background: none;
                         border: none;
-                        color: var(--primary);
                         cursor: pointer;
                         padding: 0.5rem;
-                        border-radius: 50%;
-                        transition: background-color 0.3s ease;
+                        border-radius: 0.25rem;
+                        color: var(--primary);
+                        transition: all var(--transition-normal);
                     }
 
                     .calendar-nav-btn:hover {
-                        background-color: rgba(37, 99, 235, 0.1);
+                        background-color: var(--light-gray);
+                    }
+
+                    .calendar-nav-btn:focus-visible {
+                        outline: var(--focus-ring-width) solid var(--focus-ring-color);
+                        outline-offset: 0.125rem;
+                    }
+
+                    .current-month {
+                        font-size: var(--text-lg);
+                        font-weight: 600;
+                        color: var(--dark);
                     }
 
                     .calendar-grid {
-                        background: white;
-                        border-radius: 10px;
-                        padding: 1rem;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.5rem;
                     }
 
                     .calendar-days {
                         display: grid;
                         grid-template-columns: repeat(7, 1fr);
-                        gap: 5px;
-                        margin-bottom: 0.5rem;
+                        text-align: center;
                         font-weight: 600;
                         color: var(--gray);
+                        font-size: var(--text-sm);
                     }
 
                     .calendar-dates {
                         display: grid;
                         grid-template-columns: repeat(7, 1fr);
-                        gap: 5px;
+                        gap: 0.25rem;
                     }
 
                     .calendar-date {
@@ -1409,13 +1857,13 @@
                         align-items: center;
                         justify-content: center;
                         cursor: pointer;
-                        border-radius: 5px;
-                        transition: all 0.3s ease;
-                        position: relative;
+                        border-radius: 0.25rem;
+                        font-size: var(--text-sm);
+                        transition: all var(--transition-normal);
                     }
 
                     .calendar-date:hover {
-                        background-color: rgba(37, 99, 235, 0.1);
+                        background-color: var(--light-gray);
                     }
 
                     .calendar-date.active {
@@ -1423,92 +1871,13 @@
                         color: white;
                     }
 
-                    .calendar-date.has-events::after {
-                        content: '';
-                        position: absolute;
-                        bottom: 2px;
-                        width: 4px;
-                        height: 4px;
-                        background: var(--accent);
-                        border-radius: 50%;
+                    .calendar-date.today {
+                        border: 0.125rem solid var(--primary);
                     }
 
-                    .calendar-actions {
-                        margin-top: 2rem;
-                    }
-
-                    .calendar-sync-options {
-                        display: grid;
-                        gap: 1rem;
-                        margin: 1rem 0;
-                    }
-
-                    .sync-button {
-                        display: flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        padding: 0.75rem 1rem;
-                        border: none;
-                        border-radius: 8px;
-                        cursor: pointer;
-                        font-weight: 500;
-                        transition: all 0.3s ease;
-                    }
-
-                    .sync-button.google {
-                        background: #4285f4;
-                        color: white;
-                    }
-
-                    .sync-button.outlook {
-                        background: #0078d4;
-                        color: white;
-                    }
-
-                    .sync-button.ics {
-                        background: var(--light);
-                        color: var(--dark);
-                        border: 1px solid var(--light-gray);
-                    }
-
-                    .sync-button:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                    }
-
-                    .sync-settings {
-                        margin-top: 2rem;
-                    }
-
-                    .settings-grid {
-                        display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                        gap: 1rem;
-                        margin-top: 1rem;
-                    }
-
-                    .setting-item {
-                        display: flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        cursor: pointer;
-                    }
-
-                    .sync-status {
-                        margin-top: 1.5rem;
-                        padding-top: 1rem;
-                        border-top: 1px solid var(--light-gray);
+                    .calendar-date.other-month {
                         color: var(--gray);
-                        display: flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        font-size: 0.9rem;
-                    }
-
-                    @media (max-width: 768px) {
-                        .calendar-sync-options {
-                            grid-template-columns: 1fr;
-                        }
+                        opacity: 0.5;
                     }
                 </style>
             </div>
@@ -1694,6 +2063,15 @@
             width: 100%;
             padding: 0.5rem;
             border: 1px solid var(--light-gray);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--light-gray);
             border-radius: 8px;
             font-size: 1rem;
         }
@@ -1742,6 +2120,7 @@
                 const sectionTop = section.offsetTop - 120;
                 if (scrollY >= sectionTop) {
                     currentSection = section.getAttribute('id');
+               
                 }
             });
             
@@ -2178,220 +2557,133 @@ END:VCALENDAR`;
 
         class CalendarManager {
             constructor() {
-                this.currentDate = new Date();
-                this.events = this.getScheduledEvents();
-                this.googleAuth = null;
-                this.initializeCalendar();
-                this.setupEventListeners();
-                this.initializeGoogleCalendar();
-            }
-
-            async initializeGoogleCalendar() {
-                // Google Cloud Project credentials
-                const CLIENT_ID = '22289826592-1cu7j0fejvad2pd5qrr3bo7ecl05v9rc.apps.googleusercontent.com';
-                const API_KEY = 'AIzaSyC6YWM_UhvgtPyTP2zt-gYPzymUOiGKgqI';
-                const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-                const SCOPES = "https://www.googleapis.com/auth/calendar.events";
-
-                try {
-                    await new Promise((resolve) => gapi.load('client:auth2', resolve));
-                    await gapi.client.init({
-                        apiKey: API_KEY,
-                        clientId: CLIENT_ID,
-                        discoveryDocs: DISCOVERY_DOCS,
-                        scope: SCOPES
-                    });
-
-                    // Listen for sign-in state changes
-                    gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus.bind(this));
-                    
-                    // Handle the initial sign-in state
-                    this.updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-
-                    // Setup auth button
-                    document.getElementById('googleAuthSection').innerHTML = `
-                        <button id="googleAuthBtn" class="sync-button google">
-                            <i class="fab fa-google"></i> Sign in with Google
-                        </button>
-                    `;
-                    document.getElementById('googleAuthBtn').onclick = () => this.handleAuthClick();
-
-                } catch (error) {
-                    console.error('Error initializing Google Calendar:', error);
-                    document.getElementById('googleAuthSection').innerHTML = 
-                        '<p class="error-message">Failed to initialize Google Calendar integration</p>';
+                this.initializeElements();
+                if (this.elementsExist) {
+                    this.currentDate = new Date();
+                    this.selectedDate = new Date();
+                    this.setupEventListeners();
+                    this.render();
                 }
-
             }
 
-            initializeCalendar() {
-                this.renderCalendar();
-                this.updateSyncStatus();
+            initializeElements() {
+                try {
+                    this.calendar = document.getElementById('calendarPreview');
+                    this.prevButton = this.calendar?.querySelector('.prev-month');
+                    this.nextButton = this.calendar?.querySelector('.next-month');
+                    this.monthDisplay = this.calendar?.querySelector('.current-month');
+                    this.datesGrid = this.calendar?.querySelector('.calendar-dates');
+                    this.syncButton = document.getElementById('syncCalendar');
+
+                    this.elementsExist = !!(
+                        this.calendar &&
+                        this.prevButton &&
+                        this.nextButton &&
+                        this.monthDisplay &&
+                        this.datesGrid
+                    );
+                } catch (error) {
+                    console.error('Error initializing calendar elements:', error);
+                    this.elementsExist = false;
+                }
             }
 
             setupEventListeners() {
-                document.getElementById('prevMonth').addEventListener('click', () => this.changeMonth(-1));
-                document.getElementById('nextMonth').addEventListener('click', () => this.changeMonth(1));
-                document.getElementById('googleCalendarSync').addEventListener('click', () => this.syncWithGoogle());
-                document.getElementById('outlookSync').addEventListener('click', () => this.syncWithOutlook());
-                document.getElementById('downloadICS').addEventListener('click', () => this.downloadICSFile());
+                if (!this.elementsExist) return;
+
+                this.prevButton.addEventListener('click', () => this.changeMonth(-1));
+                this.nextButton.addEventListener('click', () => this.changeMonth(1));
+                
+                if (this.syncButton) {
+                    this.syncButton.addEventListener('click', () => this.syncWithGoogleCalendar());
+                }
             }
 
-            changeMonth(offset) {
-                this.currentDate.setMonth(this.currentDate.getMonth() + offset);
-                this.renderCalendar();
+            changeMonth(delta) {
+                this.currentDate.setMonth(this.currentDate.getMonth() + delta);
+                this.render();
             }
 
-            renderCalendar() {
+            render() {
+                if (!this.elementsExist) return;
+
                 const year = this.currentDate.getFullYear();
                 const month = this.currentDate.getMonth();
-                
-                // Update header
-                document.querySelector('.calendar-header').textContent = 
-                    new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
 
-                // Clear existing calendar
-                const daysContainer = document.querySelector('.calendar-days');
-                const datesContainer = document.querySelector('.calendar-dates');
-                daysContainer.innerHTML = '';
-                datesContainer.innerHTML = '';
+                // Update month display
+                this.monthDisplay.textContent = new Intl.DateTimeFormat('en-US', {
+                    month: 'long',
+                    year: 'numeric'
+                }).format(this.currentDate);
 
-                // Add day headers
-                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                days.forEach(day => {
-                    daysContainer.innerHTML += `<div class="calendar-day">${day}</div>`;
-                });
+                // Clear existing dates
+                this.datesGrid.innerHTML = '';
 
                 // Get first day of month and total days
-                const firstDay = new Date(year, month, 1).getDay();
-                const totalDays = new Date(year, month + 1, 0).getDate();
+                const firstDay = new Date(year, month, 1);
+                const lastDay = new Date(year, month + 1, 0);
+                const startDay = firstDay.getDay();
+                const totalDays = lastDay.getDate();
 
-                // Add padding for first week
-                for (let i = 0; i < firstDay; i++) {
-                    datesContainer.innerHTML += `<div class="calendar-date"></div>`;
+                // Add previous month's days
+                const prevMonthDays = new Date(year, month, 0).getDate();
+                for (let i = startDay - 1; i >= 0; i--) {
+                    const dateDiv = document.createElement('div');
+                    dateDiv.className = 'calendar-date other-month';
+                    dateDiv.textContent = prevMonthDays - i;
+                    this.datesGrid.appendChild(dateDiv);
                 }
 
-                // Add days
-                for (let day = 1; day <= totalDays; day++) {
-                    const date = new Date(year, month, day);
-                    const hasEvents = this.hasEvents(date);
-                    const isToday = this.isToday(date);
-                    
-                    datesContainer.innerHTML += `
-                        <div class="calendar-date ${isToday ? 'active' : ''} ${hasEvents ? 'has-events' : ''}"
-                             data-date="${date.toISOString().split('T')[0]}">
-                            ${day}
-                        </div>`;
-                }
-            }
-
-            getScheduledEvents() {
-                // Get all daily schedule items
-                return [
-                    { time: '05:30', title: 'Wake Up', category: 'daily' },
-                    { time: '06:00', title: 'Bike Commute', category: 'exercise' },
-                    { time: '07:00', title: 'Gym Workout', category: 'exercise' },
-                    { time: '07:45', title: 'GCP Study', category: 'study' },
-                    { time: '12:45', title: 'Meal 1', category: 'meals' },
-                    { time: '18:00', title: 'Family Dinner', category: 'meals' },
-                    { time: '19:00', title: 'Family Activity', category: 'family' },
-                    { time: '20:00', title: 'GCP Review', category: 'study' }
-                ];
-            }
-
-            hasEvents(date) {
-                // Check if the date has any scheduled events
-                const dateStr = date.toISOString().split('T')[0];
-                // For now, assume weekdays have events
-                return date.getDay() !== 0 && date.getDay() !== 6;
-            }
-
-            isToday(date) {
+                // Add current month's days
                 const today = new Date();
-                return date.getDate() === today.getDate() &&
-                       date.getMonth() === today.getMonth() &&
-                       date.getFullYear() === today.getFullYear();
-            }
+                for (let day = 1; day <= totalDays; day++) {
+                    const dateDiv = document.createElement('div');
+                    dateDiv.className = 'calendar-date';
+                    dateDiv.textContent = day;
 
-            async syncWithGoogle() {
-                try {
-                    const events = this.getScheduledEvents();
-                    // Here you would implement actual Google Calendar API integration
-                    console.log('Syncing with Google Calendar:', events);
-                    this.updateSyncStatus('Google Calendar');
-                } catch (error) {
-                    console.error('Google Calendar sync failed:', error);
-                    alert('Failed to sync with Google Calendar. Please try again.');
+                    if (
+                        day === today.getDate() &&
+                        month === today.getMonth() &&
+                        year === today.getFullYear()
+                    ) {
+                        dateDiv.classList.add('today');
+                    }
+
+                    if (
+                        day === this.selectedDate.getDate() &&
+                        month === this.selectedDate.getMonth() &&
+                        year === this.selectedDate.getFullYear()
+                    ) {
+                        dateDiv.classList.add('active');
+                    }
+
+                    dateDiv.addEventListener('click', () => this.selectDate(new Date(year, month, day)));
+                    this.datesGrid.appendChild(dateDiv);
+                }
+
+                // Add next month's days
+                const remainingCells = 42 - (startDay + totalDays);
+                for (let day = 1; day <= remainingCells; day++) {
+                    const dateDiv = document.createElement('div');
+                    dateDiv.className = 'calendar-date other-month';
+                    dateDiv.textContent = day;
+                    this.datesGrid.appendChild(dateDiv);
                 }
             }
 
-            async syncWithOutlook() {
+            selectDate(date) {
+                this.selectedDate = date;
+                this.render();
+                this.calendar.dispatchEvent(new CustomEvent('dateSelected', { detail: date }));
+            }
+
+            async syncWithGoogleCalendar() {
                 try {
-                    const events = this.getScheduledEvents();
-                    // Here you would implement actual Outlook API integration
-                    console.log('Syncing with Outlook:', events);
-                    this.updateSyncStatus('Outlook');
+                    console.log('Syncing with Google Calendar...');
+                    // Implement Google Calendar sync logic here
                 } catch (error) {
-                    console.error('Outlook sync failed:', error);
-                    alert('Failed to sync with Outlook. Please try again.');
+                    console.error('Error syncing with Google Calendar:', error);
                 }
-            }
-
-            downloadICSFile() {
-                const events = this.getScheduledEvents();
-                const icsContent = this.generateICSContent(events);
-                
-                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-                const link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = 'master-life-plan.ics';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                this.updateSyncStatus('ICS Download');
-            }
-
-            generateICSContent(events) {
-                const now = new Date();
-                const stampString = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-
-                let icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Master Life Plan//EN
-`;
-
-                events.forEach(event => {
-                    const eventDate = new Date();
-                    const [hours, minutes] = event.time.split(':');
-                    eventDate.setHours(parseInt(hours), parseInt(minutes), 0);
-
-                    const startString = eventDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                    eventDate.setHours(eventDate.getHours() + 1); // 1-hour duration
-                    const endString = eventDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-
-                    icsContent += `BEGIN:VEVENT
-DTSTART:${startString}
-DTEND:${endString}
-RRULE:FREQ=DAILY
-DTSTAMP:${stampString}
-SUMMARY:${event.title}
-DESCRIPTION:Master Life Plan - ${event.category}
-END:VEVENT
-`;
-                });
-
-                icsContent += 'END:VCALENDAR';
-                return icsContent;
-            }
-
-            updateSyncStatus(method) {
-                const lastSyncTime = document.getElementById('lastSyncTime');
-                lastSyncTime.textContent = `${new Date().toLocaleString()} (${method})`;
-                localStorage.setItem('lastCalendarSync', JSON.stringify({
-                    time: new Date().toISOString(),
-                    method: method
-                }));
             }
         }
 
