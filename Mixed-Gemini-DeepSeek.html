@@ -358,11 +358,7 @@
     </style>
 
     <!-- Load JavaScript Modules -->
-    <script type="module">
-        import { themeManager, storageManager, eventManager, formValidator, animationUtils, utils } from './assets/js/utils.js';
-        import { STORAGE_KEYS, TAB_IDS, EVENT_TYPES, STATUS_TYPES, THEME_TYPES } from './assets/js/constants.js';
-        import { UIController, APIController } from './assets/js/app.js';
-        
+    <script>
         // Make showTab function globally available
         window.showTab = function(tabId) {
             UIController.showTab(tabId);
@@ -390,14 +386,10 @@
 
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize theme
-            themeManager.initTheme();
-            themeManager.setTheme('dark'); // or 'light'
-
             // Set up live region for accessibility
             createLiveRegion();
             
-            // Initialize UI Controller
+            // Initialize UI Controller which handles all component initialization
             UIController.init();
 
             // Set up mobile menu
@@ -454,75 +446,6 @@
                     showTab(tabIds[nextIndex]);
                 });
             }
-        });
-    </script>
-                
-                if (isExpanded) {
-                    mainNavLinks.style.display = 'none';
-                } else {
-                    mainNavLinks.style.display = 'flex';
-                }
-            });
-
-            document.addEventListener('click', function(event) {
-                if (!event.target.closest('.main-nav') && mainNavLinks.classList.contains('show')) {
-                    mobileMenuButton.setAttribute('aria-expanded', 'false');
-                    mainNavLinks.classList.remove('show');
-                    mainNavLinks.style.display = 'none';
-                }
-            });
-
-            mainNavLinks.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && mainNavLinks.classList.contains('show')) {
-                    mobileMenuButton.setAttribute('aria-expanded', 'false');
-                    mainNavLinks.classList.remove('show');
-                    mainNavLinks.style.display = 'none';
-                    mobileMenuButton.focus();
-                }
-            });
-
-            // Initialize the UI components
-            UIController.init();
-
-            // Set up keyboard navigation for tabs
-            const tabList = document.querySelector('[role="tablist"]');
-            const tabs = tabList.querySelectorAll('[role="tab"]');
-            const tabIds = Array.from(tabs).map(tab => tab.id.replace('-tab', ''));
-
-            tabList.addEventListener('keydown', (e) => {
-                const targetTab = e.target.closest('[role="tab"]');
-                if (!targetTab) return;
-
-                let currentIndex = tabIds.indexOf(targetTab.id.replace('-tab', ''));
-                let nextIndex;
-
-                switch (e.key) {
-                    case 'ArrowLeft':
-                        nextIndex = currentIndex - 1;
-                        if (nextIndex < 0) nextIndex = tabIds.length - 1;
-                        e.preventDefault();
-                        break;
-                    case 'ArrowRight':
-                        nextIndex = currentIndex + 1;
-                        if (nextIndex >= tabIds.length) nextIndex = 0;
-                        e.preventDefault();
-                        break;
-                    case 'Home':
-                        nextIndex = 0;
-                        e.preventDefault();
-                        break;
-                    case 'End':
-                        nextIndex = tabIds.length - 1;
-                        e.preventDefault();
-                        break;
-                    default:
-                        return;
-                }
-
-                const nextTab = document.getElementById(`${tabIds[nextIndex]}-tab`);
-                nextTab.focus();
-                showTab(tabIds[nextIndex]);
-            });
         });
     </script>
     <!-- Header -->
@@ -842,88 +765,7 @@
 
 
 
-            // Initialize daily checklist
-            const dailyChecklist = [
-                { id: 'hydration', text: 'Track Water Intake (3.5-4.0L)', category: 'health' },
-                { id: 'supplements', text: 'Take Morning Supplements', category: 'health' },
-                { id: 'exercise', text: 'Complete Scheduled Workout', category: 'health' },
-                { id: 'study', text: 'GCP Study Session (30 mins)', category: 'career' },
-                { id: 'breathing', text: 'Evening Breathing Practice', category: 'wellbeing' },
-                { id: 'family', text: 'Family Activity Time', category: 'family' }
-            ];
 
-            // Render daily checklist
-            const checklistContainer = document.getElementById('daily-checklist');
-            if (checklistContainer) {
-                dailyChecklist.forEach(item => {
-                    const li = document.createElement('li');
-                    li.className = 'flex items-center space-x-3';
-                    li.innerHTML = `
-                        <input type="checkbox" id="${item.id}" class="form-checkbox h-5 w-5 text-[var(--primary)]">
-                        <label for="${item.id}" class="flex-1">${item.text}</label>
-                    `;
-                    checklistContainer.appendChild(li);
-                });
-            }
-
-            // Set up water tracker
-            const waterTracker = document.getElementById('water-tracker');
-            const waterLevel = document.getElementById('water-level');
-            if (waterTracker && waterLevel) {
-                waterTracker.addEventListener('input', function() {
-                    waterLevel.textContent = this.value.toFixed(2) + ' L';
-                });
-            }
-
-            // Display current date
-            const currentDateEl = document.getElementById('currentDate');
-            if (currentDateEl) {
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                currentDateEl.textContent = new Date().toLocaleDateString('en-US', options);
-            }
-
-            // Set up supplement tracker
-            const supplementList = [
-                { id: 'vit-d', name: 'Vitamin D3' },
-                { id: 'b12', name: 'B12' },
-                { id: 'omega', name: 'Omega-3' },
-                { id: 'cranberry', name: 'Cranberry' },
-                { id: 'magnesium', name: 'Magnesium Citrate' }
-            ];
-
-            const supplementContainer = document.getElementById('supplement-tracker');
-            if (supplementContainer) {
-                supplementList.forEach(supp => {
-                    const div = document.createElement('div');
-                    div.className = 'flex items-center space-x-3';
-                    div.innerHTML = `
-                        <input type="checkbox" id="${supp.id}" class="form-checkbox h-5 w-5 text-[var(--primary)]">
-                        <label for="${supp.id}" class="flex-1">${supp.name}</label>
-                    `;
-                    supplementContainer.appendChild(div);
-                });
-            }
-
-            // Restore any saved data
-            const savedTab = storageManager.getData(APP_CONSTANTS.STORAGE_KEYS.CURRENT_TAB);
-            if (savedTab) {
-                showTab(savedTab);
-            } else {
-                showTab('dashboard'); // Default tab
-            }
-
-            // Initialize theme
-            themeManager.initTheme();
-            themeManager.setTheme('dark'); // or 'light'
-
-            // Set up event listeners for tab persistence
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const tabId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
-                    storageManager.saveData(APP_CONSTANTS.STORAGE_KEYS.CURRENT_TAB, tabId);
-                });
-            });
-        });
     </script>
 </body>
 </html>
