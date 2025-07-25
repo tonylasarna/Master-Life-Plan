@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Life Plan 2025 - Integrated Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Master Life Plan 2025</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+         document.addEventListener('DOMContentLoaded', function() {
+            // Set up live region for accessibility
+            createLiveRegion();
+            
+            // Initialize UI Controller which handles all component initialization
+            UIController.init();
+
+            // Set up mobile menu
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mainNavLinks = document.getElementById('main-nav-links');
+            
+            if (mobileMenuButton && mainNavLinks) {
+                mobileMenuButton.addEventListener('click', function() {
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    this.setAttribute('aria-expanded', !isExpanded);
+                    mainNavLinks.classList.toggle('show');
+                    mainNavLinks.style.display = mainNavLinks.classList.contains('show') ? 'flex' : 'none';stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script type="module" src="assets/js/app.js"></script>
     <style>
         :root {
