@@ -8,782 +8,573 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet"
-         document.addEventListener('DOMContentLoaded', function() {
-            // Set up live region for accessibility
-            createLiveRegion();
-            
-            // Initialize UI Controller which handles all component initialization
-            UIController.init();
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --secondary: #0ea5e9;
+      --accent: #8b5cf6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --dark: #0f172a;
+      --gray: #64748b;
+      --light: #f8fafc;
+      --light-gray: #e2e8f0;
+      --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    body {
+      font-family: "Inter", sans-serif;
+      background: #f3f4f6;
+      color: var(--dark);
+    }
+    .card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-0.5rem);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .tab-button {
+      padding: 0.75rem 1rem;
+      border-bottom: 4px solid transparent;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .tab-button.active {
+      color: var(--primary);
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+    .hidden {
+      display: none;
+    }
+    .section-title h2 {
+      font-size: 1.875rem;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+    .section-title h2::after {
+      content: "";
+      position: absolute;
+      bottom: -0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5rem;
+      height: 0.25rem;
+      background: var(--accent);
+      border-radius: 0.25rem;
+    }
+    .tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin: 0.125rem;
+    }
+    .tag-health { background: #dbeafe; color: var(--primary); }
+    .tag-work   { background: #ede9fe; color: var(--accent); }
+    .tag-family { background: #f0fdf4; color: var(--success); }
+    .tag-learning{ background: #ecfeff; color: #06b6d4; }
 
-            // Set up mobile menu
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mainNavLinks = document.getElementById('main-nav-links');
-            
-            if (mobileMenuButton && mainNavLinks) {
-                mobileMenuButton.addEventListener('click', function() {
-                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                    this.setAttribute('aria-expanded', !isExpanded);
-                    mainNavLinks.classList.toggle('show');
-                    mainNavLinks.style.display = mainNavLinks.classList.contains('show') ? 'flex' : 'none';stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script type="module" src="assets/js/app.js"></script>
-    <style>
-        :root {
-            /* Colors - WCAG AA compliant */
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #0ea5e9;
-            --secondary-dark: #0369a1;
-            --accent: #8b5cf6;
-            --accent-dark: #7c3aed;
-            --success: #10b981;
-            --success-dark: #059669;
-            --warning: #f59e0b;
-            --warning-dark: #d97706;
-            --dark: #0f172a;
-            --gray: #64748b;
-            --light-gray: #e2e8f0;
-            --light: #f8fafc;
+    /* Sticky headers */
+    .schedule-table thead th {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 10;
+    }
 
-            /* Spacing */
-            --space-1: 0.25rem;
-            --space-2: 0.5rem;
-            --space-3: 0.75rem;
-            --space-4: 1rem;
-            --space-6: 1.5rem;
-            --space-8: 2rem;
-            --space-12: 3rem;
-            --space-16: 4rem;
+    /* Mobile card view for schedule */
+    .schedule-cards { display: grid; gap: 1rem; }
+    @media (min-width: 768px) {
+      .schedule-cards { display: none; }
+      .schedule-table  { display: table; }
+    }
+    @media (max-width: 767px) {
+      .schedule-table { display: none; }
+    }
 
-            /* Typography */
-            --text-xs: 0.75rem;
-            --text-sm: 0.875rem;
-            --text-base: 1rem;
-            --text-lg: 1.125rem;
-            --text-xl: 1.25rem;
-            --text-2xl: 1.5rem;
-            --text-3xl: 1.875rem;
-            --text-4xl: 2.25rem;
-
-            /* Border Radius */
-            --radius-sm: 0.25rem;
-            --radius-md: 0.5rem;
-            --radius-lg: 1rem;
-            --radius-xl: 1.5rem;
-
-            /* Shadows */
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --card-shadow: var(--shadow-lg), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-
-            /* Focus Ring */
-            --focus-ring: 0 0 0 3px var(--primary);
-            --focus-ring-offset: 2px;
-
-            /* Transitions */
-            --transition-fast: 150ms ease;
-            --transition-normal: 300ms ease;
-            --transition-slow: 500ms ease;
-        }
-
-        /* Dark mode colors */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --primary: #3b82f6;
-                --primary-dark: #60a5fa;
-                --background: #1a1a1a;
-                --text: #ffffff;
-                --card-bg: #2d2d2d;
-                --border: #404040;
-            }
-        }
-
-        /* Base styles */
-        html {
-            font-size: 16px;
-            line-height: 1.5;
-            -webkit-text-size-adjust: 100%;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: #f3f4f6;
-            color: var(--dark);
-            min-height: 100vh;
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Common components */
-        .card {
-            background: white;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--card-shadow);
-            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            overflow: hidden; /* Ensure content doesn't break radius */
-        }
-        .card:hover {
-            transform: translateY(-7px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .tab-button {
-            transition: all 0.3s ease;
-            padding: 1rem 0.75rem;
-            border-bottom: 3px solid transparent;
-        }
-        .tab-button.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-            font-weight: 600;
-        }
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        .section-title h2 {
-            font-size: 2rem;
-            color: var(--primary);
-            position: relative;
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
-        .section-title h2::after {
-            content: "";
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: var(--accent);
-            border-radius: 2px;
-        }
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 100;
-        }
-        .modal-content {
-            background: white; padding: 2.5rem; border-radius: 15px;
-            max-width: 90%; width: 600px; max-height: 80vh; overflow-y: auto;
-        }
-        .loader {
-            border: 4px solid #f3f3f3; border-top: 4px solid var(--primary);
-            border-radius: 50%; width: 40px; height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        .tag {
-            display: inline-block; padding: 5px 12px; border-radius: 20px;
-            font-size: 0.8rem; font-weight: 600; margin: 2px;
-        }
-        .tag-health { background-color: #dbeafe; color: var(--primary); }
-        .tag-work { background-color: #ede9fe; color: var(--accent); }
-        .tag-family { background-color: #f0fdf4; color: var(--success); }
-        .tag-learning { background-color: #ecfeff; color: #06b6d4; }
-        .timeline { position: relative; padding: 20px 0; }
-        .timeline::before {
-            content: ''; position: absolute; top: 0; bottom: 0;
-            left: 20px; width: 4px; background: var(--light-gray); border-radius: 2px;
-        }
-        .timeline-item { position: relative; padding-left: 50px; margin-bottom: 30px; }
-        .timeline-item:last-child { margin-bottom: 0; }
-        .timeline-dot {
-            position: absolute; left: 12px; top: 5px; width: 20px; height: 20px;
-            border-radius: 50%; background: var(--primary); z-index: 1;
-        }
-        .timeline-content {
-            background: var(--light); border-radius: 10px; padding: 20px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-        }
-        .timeline-title { font-weight: 600; color: var(--primary); margin-bottom: 8px; }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @media print {
-            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .no-print { display: none; }
-            .card { box-shadow: none; border: 1px solid #e5e7eb; }
-            .tab-content { display: block !important; }
-            .modal-overlay { display: none; }
-        }
-    </style>
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .modal-content {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      max-width: 32rem;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      .card { box-shadow: none !important; border: 1px solid #e5e7eb !important; }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-dark">
-    <!-- Main Navigation Menu -->
-    <nav class="main-nav bg-white shadow-lg sticky top-0 z-50 no-print" role="navigation" aria-label="Main navigation">
-        <div class="container mx-auto px-4">
-            <!-- Mobile Menu Button -->
-            <button id="mobile-menu-button" 
-                    class="lg:hidden absolute left-4 top-1/2 transform -translate-y-1/2 p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                    aria-expanded="false"
-                    aria-controls="main-nav-links"
-                    aria-label="Toggle navigation menu">
-                <svg class="w-6 h-6 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-16 6h16"/>
-                </svg>
-            </button>
-
-            <!-- Navigation Links -->
-            <div id="main-nav-links" 
-                 class="hidden lg:flex justify-center items-center py-4 space-x-6"
-                 role="menubar">
-                <a href="Mixed-Gemini-DeepSeek.html" 
-                   class="nav-link active" 
-                   role="menuitem" 
-                   aria-current="page">
-                    <span class="nav-text">Dashboard</span>
-                    <span class="nav-description">Home</span>
-                </a>
-                <a href="ChatGPT-Version.html" 
-                   class="nav-link" 
-                   role="menuitem">
-                    <span class="nav-text">ChatGPT</span>
-                    <span class="nav-description">AI Assistant</span>
-                </a>
-                <a href="index.html" 
-                   class="nav-link" 
-                   role="menuitem">
-                    <span class="nav-text">Home DeepSeek</span>
-                    <span class="nav-description">AI Planner</span>
-                </a>
-                <a href="Google-version-Home.html" 
-                   class="nav-link" 
-                   role="menuitem">
-                    <span class="nav-text">Google</span>
-                    <span class="nav-description">Smart Plan</span>
-                </a>
-                <a href="ChatGPT+Gemini+DeepSeek.html" 
-                   class="nav-link" 
-                   role="menuitem">
-                    <span class="nav-text">Combined</span>
-                    <span class="nav-description">All Features</span>
-                </a>
-            </div>
-        </div>
-    </nav>
-    
-    <!-- Navigation Styles -->
-    <style>
-        /* Base Navigation Styles */
-        .main-nav {
-            background: white;
-            transition: all 0.3s ease;
-        }
-
-        /* Navigation Link Styles */
-        .nav-link {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            color: var(--dark);
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            position: relative;
-            min-width: 7rem;
-        }
-
-        .nav-text {
-            font-size: var(--text-base);
-            position: relative;
-            z-index: 1;
-        }
-
-        .nav-description {
-            font-size: var(--text-xs);
-            color: var(--gray);
-            margin-top: 0.25rem;
-        }
-
-        /* Hover & Active States */
-        .nav-link:hover,
-        .nav-link:focus-visible {
-            color: var(--primary);
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(14, 165, 233, 0.1));
-            outline: none;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .nav-link:hover::after,
-        .nav-link.active::after {
-            transform: scaleX(1);
-        }
-
-        .nav-link.active {
-            color: var(--primary);
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(14, 165, 233, 0.1));
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            #main-nav-links {
-                position: fixed;
-                top: 4rem;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                padding: 1rem;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                border-top: 1px solid var(--light-gray);
-            }
-
-            #main-nav-links.show {
-                display: flex;
-            }
-
-            .nav-link {
-                width: 100%;
-                flex-direction: row;
-                justify-content: space-between;
-                padding: 1rem;
-                border-radius: 0.5rem;
-            }
-
-            .nav-description {
-                margin-top: 0;
-                margin-left: 1rem;
-            }
-        }
-
-        /* Accessibility Enhancements */
-        .nav-link:focus-visible {
-            outline: 3px solid var(--primary);
-            outline-offset: -1px;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .nav-link {
-                transition: none;
-            }
-        }
-    </style>
-
-    <!-- Load JavaScript Modules -->
-    <script>
-        // Make showTab function globally available
-        window.showTab = function(tabId) {
-            UIController.showTab(tabId);
-        };
-
-        window.closeModal = function() {
-            const modal = document.getElementById('modal');
-            if (modal) {
-                animationUtils.fadeOut(modal);
-            }
-        };
-
-        // Create live region for accessibility announcements
-        function createLiveRegion() {
-            if (!document.getElementById('a11y-announce')) {
-                const region = document.createElement('div');
-                region.id = 'a11y-announce';
-                region.setAttribute('aria-live', 'polite');
-                region.setAttribute('aria-atomic', 'true');
-                region.classList.add('sr-only');
-                document.body.appendChild(region);
-                return region;
-            }
-        }
-
-        // Initialize everything when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set up live region for accessibility
-            createLiveRegion();
-            
-            // Initialize UI Controller which handles all component initialization
-            UIController.init();
-
-            // Set up mobile menu
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mainNavLinks = document.getElementById('main-nav-links');
-            
-            if (mobileMenuButton && mainNavLinks) {
-                mobileMenuButton.addEventListener('click', function() {
-                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                    this.setAttribute('aria-expanded', !isExpanded);
-                    mainNavLinks.classList.toggle('show');
-                });
-            }
-
-            // Set up calendar download functionality
-            const downloadCalendarBtn = document.getElementById('downloadCalendar');
-            if (downloadCalendarBtn) {
-                downloadCalendarBtn.addEventListener('click', function() {
-                    const events = [
-                        { start: '20250108T170000', recurrence: 'FREQ=WEEKLY;BYDAY=WE;COUNT=52', summary: 'Weightlifting: Lower Body' },
-                        { start: '20250110T170000', recurrence: 'FREQ=WEEKLY;BYDAY=FR;COUNT=52', summary: 'Weightlifting: Full-Body Circuit' },
-                        { start: '20250104T100000', recurrence: 'FREQ=WEEKLY;BYDAY=SA;COUNT=52', summary: 'Pilates / Yoga Session' },
-                        { start: '20250105T160000', recurrence: 'FREQ=WEEKLY;BYDAY=SU;COUNT=52', summary: 'Meal Prep & Weekly Reflection' }
-                    ];
-
-                    const calContent = utils.generateICSContent(events);
-                    utils.downloadFile(calContent, 'Master_Life_Plan_2025.ics', 'text/calendar;charset=utf-8');
-                });
-            }
-
-            // Initialize event listeners for tabs
-            const tabContainer = document.querySelector('[role="tablist"]');
-            if (tabContainer) {
-                const tabIds = Array.from(document.querySelectorAll('[role="tab"]')).map(tab => tab.getAttribute('aria-controls'));
-                
-                tabContainer.addEventListener('keydown', function(e) {
-                    const currentTab = document.activeElement;
-                    if (!currentTab.matches('[role="tab"]')) return;
-
-                    const currentIndex = tabIds.indexOf(currentTab.getAttribute('aria-controls'));
-                    let nextIndex;
-
-                    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                        nextIndex = (currentIndex + 1) % tabIds.length;
-                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                        nextIndex = (currentIndex - 1 + tabIds.length) % tabIds.length;
-                    } else {
-                        return;
-                    }
-
-                    e.preventDefault();
-                    const nextTab = document.getElementById(`${tabIds[nextIndex]}-tab`);
-                    nextTab.focus();
-                    showTab(tabIds[nextIndex]);
-                });
-            }
-        });
-    </script>
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] text-white p-8 shadow-lg relative overflow-hidden border-b-4 border-[var(--accent)]" role="banner">
-        <div class="relative z-10 text-center">
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-shadow leading-tight">Master Life Plan 2025</h1>
-            <p class="max-w-3xl mx-auto text-lg md:text-xl opacity-90">Your Integrated Dashboard for a Year of Growth</p>
-            <div class="mt-6 inline-block bg-white/20 backdrop-blur-sm rounded-xl p-4" role="complementary" aria-label="User Profile">
-                <dl class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2">
-                    <div class="flex items-center gap-2">
-                        <dt class="sr-only">Name and Age</dt>
-                        <dd><i class="fas fa-user" aria-hidden="true"></i> Anthony Ramirez, 44</dd>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <dt class="sr-only">Occupation</dt>
-                        <dd><i class="fas fa-briefcase" aria-hidden="true"></i> IT Manager</dd>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <dt class="sr-only">Location</dt>
-                        <dd><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Toronto, ON</dd>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <dt class="sr-only">Health Conditions</dt>
-                        <dd><i class="fas fa-heartbeat" aria-hidden="true"></i> Sciatica & Ulcer Management</dd>
-                    </div>
-                </dl>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation Tabs -->
-    <div class="mb-8 no-print sticky top-0 bg-white/80 backdrop-blur-md z-40 shadow-md">
-        <div class="container mx-auto px-4">
-            <nav class="-mb-px flex justify-center overflow-x-auto" role="tablist" aria-label="Dashboard Sections">
-                <div class="flex space-x-2 sm:space-x-4 py-2">
-                    <button onclick="showTab('dashboard')" 
-                            class="tab-button active flex-shrink-0" 
-                            role="tab" 
-                            aria-selected="true" 
-                            aria-controls="dashboard-panel" 
-                            id="dashboard-tab">
-                        <span class="sr-only">View </span>Dashboard
-                    </button>
-                    <button onclick="showTab('schedule')" 
-                            class="tab-button flex-shrink-0" 
-                            role="tab" 
-                            aria-selected="false" 
-                            aria-controls="schedule-panel" 
-                            id="schedule-tab">
-                        <span class="sr-only">View </span>Schedule
-                    </button>
-                    <button onclick="showTab('nutrition')" 
-                            class="tab-button flex-shrink-0" 
-                            role="tab" 
-                            aria-selected="false" 
-                            aria-controls="nutrition-panel" 
-                            id="nutrition-tab">
-                        <span class="sr-only">View </span>Nutrition
-                    </button>
-                    <button onclick="showTab('exercise')" 
-                            class="tab-button flex-shrink-0" 
-                            role="tab" 
-                            aria-selected="false" 
-                            aria-controls="exercise-panel" 
-                            id="exercise-tab">
-                        <span class="sr-only">View </span>Exercise
-                    </button>
-                    <button onclick="showTab('wellbeing')" 
-                            class="tab-button flex-shrink-0" 
-                            role="tab" 
-                            aria-selected="false" 
-                            aria-controls="wellbeing-panel" 
-                            id="wellbeing-tab">
-                        <span class="sr-only">View </span>Well-being
-                    </button>
-                    <button onclick="showTab('career')" 
-                            class="tab-button flex-shrink-0" 
-                            role="tab" 
-                            aria-selected="false" 
-                            aria-controls="career-panel" 
-                            id="career-tab">
-                        <span class="sr-only">View </span>Career
-                    </button>
-                    <button onclick="showTab('family')" 
-                            class="tab-button flex-shrink-0" 
-                            role="tab" 
-                            aria-selected="false" 
-                            aria-controls="family-panel" 
-                            id="family-tab">
-                        <span class="sr-only">View </span>Family
-                    </button>
-                    <button onclick="showTab('tracking')" 
-                            class="tab-button flex-shrink-0" 
-                            role="tab" 
-                            aria-selected="false" 
-                            aria-controls="tracking-panel" 
-                            id="tracking-tab">
-                        <span class="sr-only">View </span>Tracking
-                    </button>
-                </div>
-            </nav>
-        </div>
+<body>
+  <!-- HEADER -->
+  <header class="bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] text-white p-8 border-b-4 border-[var(--accent)]">
+    <div class="text-center space-y-4 max-w-3xl mx-auto">
+      <h1 class="text-4xl md:text-5xl font-extrabold">Master Life Plan 2025</h1>
+      <p class="text-lg md:text-xl opacity-90">Your Integrated Dashboard for a Year of Growth</p>
+      <div class="inline-flex flex-wrap items-center justify-center gap-4 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-xl">
+        <span><i class="fas fa-user"></i> Anthony, 44</span>
+        <span><i class="fas fa-briefcase"></i> IT Manager</span>
+        <span><i class="fas fa-map-marker-alt"></i> Toronto</span>
+        <span><i class="fas fa-heartbeat"></i> Sciatica Care</span>
+      </div>
     </div>
+  </header>
 
-    <main class="container mx-auto">
-        <!-- Tab Content -->
-        <div id="tab-content-container">
-            <!-- Dashboard -->
-            <div id="dashboard" class="tab-content">
-                <div class="section-title">
-                    <h2>Today's Focus: <span id="currentDate" class="font-medium text-gray-500"></span></h2>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="card p-6 col-span-1 md:col-span-2 lg:col-span-1">
-                        <h3 class="font-bold text-xl mb-4"><i class="fas fa-check-square mr-2 text-[var(--primary)]"></i>Daily Checklist</h3>
-                        <ul id="daily-checklist" class="space-y-3 text-gray-700"></ul>
-                    </div>
-                    <div class="card p-6 flex flex-col justify-center items-center text-center bg-gradient-to-br from-[var(--primary)] to-[var(--accent)] text-white">
-                        <h3 class="font-bold text-xl mb-3"><i class="fas fa-quote-left mr-2"></i>Quote of the Day</h3>
-                        <p id="motivational-quote" class="text-xl italic">"Success is the sum of small efforts, repeated day in and day out."</p>
-                    </div>
-                    <div class="card p-6">
-                        <h3 class="font-bold text-xl mb-4"><i class="fas fa-tint mr-2 text-[var(--primary)]"></i>Hydration & Supplements</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label for="water-tracker" class="block text-sm font-medium text-gray-700">Water Intake (Goal: 3.5 - 4.0 L)</label>
-                                <div class="flex items-center mt-1">
-                                    <input type="range" id="water-tracker" min="0" max="4" step="0.25" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[var(--primary)]">
-                                    <span id="water-level" class="ml-4 font-semibold text-[var(--primary)] w-20 text-center">0.00 L</span>
-                                </div>
-                            </div>
-                            <div>
-                                <p class="font-medium text-gray-700 mb-2">Supplements:</p>
-                                <div id="supplement-tracker" class="space-y-2"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Schedule -->
-            <div id="schedule" class="tab-content hidden">
-                <div class="section-title"><h2>Master Weekly Schedule</h2></div>
-                <div class="card p-6 overflow-x-auto">
-                    <table class="w-full border-collapse min-w-[1000px]">
-                        <thead class="bg-gray-100">
-                            <tr class="text-left">
-                                <th class="p-4">Time</th>
-                                <th class="p-4">Monday</th>
-                                <th class="p-4">Tuesday</th>
-                                <th class="p-4">Wednesday</th>
-                                <th class="p-4">Thursday</th>
-                                <th class="p-4">Friday</th>
-                                <th class="p-4">Saturday</th>
-                                <th class="p-4">Sunday</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            <tr><td class="p-4 font-semibold">5:30-6:00</td><td class="p-4" colspan="7"><span class="tag tag-health">Wake-Up & Hydrate</span></td></tr>
-                            <tr><td class="p-4 font-semibold">6:00-7:00</td><td class="p-4" colspan="5"><span class="tag tag-health">Bike Commute (Marlee → Richmond)</span></td><td class="p-4 bg-green-50"><span class="tag tag-health">Pilates/Yoga</span></td><td class="p-4 bg-green-50"><span class="tag tag-family">Family Walk</span></td></tr>
-                            <tr><td class="p-4 font-semibold">7:00-7:30</td><td class="p-4 bg-blue-50" colspan="5"><span class="tag tag-health">AM Gym: Elliptical, Core, Stretch</span></td><td class="p-4" colspan="2">Prepare Breakfast</td></tr>
-                            <tr><td class="p-4 font-semibold">7:45-8:15</td><td class="p-4 bg-yellow-50" colspan="5"><span class="tag tag-learning">GCP Study Block 1</span></td><td class="p-4" colspan="2">Family Breakfast</td></tr>
-                            <tr><td class="p-4 font-semibold">8:30-12:00</td><td class="p-4" colspan="5"><span class="tag tag-work">Standing Desk Work Block</span></td><td class="p-4" colspan="2">Meal Prep & Errands</td></tr>
-                            <tr><td class="p-4 font-semibold">12:15-12:45</td><td class="p-4 bg-yellow-50" colspan="5"><span class="tag tag-learning">GCP Study Block 2 (Lunch)</span></td><td class="p-4" colspan="2">Lunch</td></tr>
-                            <tr><td class="p-4 font-semibold">1:00-5:00</td><td class="p-4" colspan="5"><span class="tag tag-work">Standing Desk Work Block</span></td><td class="p-4" colspan="2">Free/Family Time</td></tr>
-                            <tr><td class="p-4 font-semibold">5:00-6:00</td><td class="p-4 bg-red-50"><span class="tag tag-health">Weightlifting: Upper Body</span></td><td class="p-4"><span class="tag tag-health">Bike Home</span></td><td class="p-4 bg-red-50"><span class="tag tag-health">Weightlifting: Lower Body</span></td><td class="p-4"><span class="tag tag-health">Bike Home</span></td><td class="p-4 bg-red-50"><span class="tag tag-health">Weightlifting: Full-Body</span></td><td class="p-4" colspan="2">Prepare Dinner</td></tr>
-                            <tr><td class="p-4 font-semibold">6:00-7:00</td><td class="p-4" colspan="7"><span class="tag tag-family">Family Dinner</span></td></tr>
-                            <tr><td class="p-4 font-semibold">7:00-7:30</td><td class="p-4 bg-purple-50" colspan="7"><span class="tag tag-family">Post-Dinner Family Activity</span></td></tr>
-                            <tr><td class="p-4 font-semibold">7:30-8:00</td><td class="p-4 bg-indigo-50" colspan="7"><span class="tag tag-health">Conscious Breathing (20 min)</span></td></tr>
-                            <tr><td class="p-4 font-semibold">8:00-8:30</td><td class="p-4 bg-yellow-50" colspan="5"><span class="tag tag-learning">GCP Study Block 3</span></td><td class="p-4" colspan="2">Wind-down</td></tr>
-                            <tr><td class="p-4 font-semibold">9:30 PM</td><td class="p-4" colspan="7"><span class="tag tag-health">Sleep</span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Nutrition -->
-            <div id="nutrition" class="tab-content hidden">
-                <div class="section-title"><h2>Performance Nutrition Protocol</h2></div>
-                <div class="card p-6 mb-6">
-                    <h3 class="font-bold text-xl mb-4">Core Principles</h3>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li><b>17/7 Intermittent Fasting (4x/week):</b> Eating window ~12:00 PM - 7:00 PM on workdays.</li>
-                        <li><b>Dietary Focus:</b> Anti-inflammatory, gut-friendly foundation: Low-FODMAP, Low-Carb, Low-Sugar, Low-Salt.</li>
-                        <li><b>Family Integration:</b> Use a "Unified Base Meal" system. Your restrictive diet is the base, with healthy add-ons for family members.</li>
-                    </ul>
-                </div>
-                <div class="card p-6">
-                    <h3 class="font-bold text-xl mb-4">Seasonal Shopping & Recipe Generator</h3>
-                    <p class="mb-4">Select a season to see the recommended shopping list for Ontario. Then, generate tailored recipe ideas!</p>
-                    <div id="seasonal-shopping-list" class="mb-6"></div>
-                    <button id="generate-recipes-btn" class="w-full bg-[var(--primary)] text-white font-bold py-3 px-4 rounded-lg hover:bg-[var(--secondary)] transition duration-300 flex items-center justify-center">
-                        <i class="fas fa-magic mr-2"></i>Generate Seasonal Recipes
-                    </button>
-                </div>
-            </div>
-
-            <!-- Exercise -->
-            <div id="exercise" class="tab-content hidden">
-                 <div class="section-title"><h2>Resilient Body Exercise Program</h2></div>
-                <div class="card p-6 mb-6">
-                    <h3 class="font-bold text-xl mb-4">Sciatica-Safe Framework</h3>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li><b>Warm-Up/Cool-Down is Mandatory:</b> 5-10 mins of dynamic movement before, 5-10 mins of static stretching after.</li>
-                        <li><b>The Pain Rule:</b> Stop immediately if you feel any sharp, shooting, or radiating pain. Differentiate muscle work from nerve pain.</li>
-                        <li><b>Maintain Neutral Spine:</b> Protect your lumbar spine during all movements. Avoid excessive arching or rounding.</li>
-                    </ul>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="card p-6"><h3 class="font-bold text-lg mb-4">Upper Body (Mon)</h3><p class="text-sm mb-2 text-gray-500">3 sets of 8-12 reps. Focus on supported movements.</p><ul class="list-disc list-inside space-y-1"><li>Dumbbell Bench Press</li><li>Seated Cable Row</li><li>Single-Arm Dumbbell Row</li><li>Seated Dumbbell Overhead Press</li><li>Bicep Curls & Tricep Pushdowns</li></ul></div>
-                    <div class="card p-6"><h3 class="font-bold text-lg mb-4">Lower Body (Wed)</h3><p class="text-sm mb-2 text-gray-500">3 sets of 10-15 reps. Avoid heavy spinal load.</p><ul class="list-disc list-inside space-y-1"><li>Goblet Squats</li><li>Walking Lunges</li><li>Leg Press (back flat)</li><li>Weighted Glute Bridges</li><li>Calf Raises</li></ul></div>
-                    <div class="card p-6"><h3 class="font-bold text-lg mb-4">Full Body (Fri)</h3><p class="text-sm mb-2 text-gray-500">3 rounds, 45s work / 15s rest.</p><ul class="list-disc list-inside space-y-1"><li>Goblet Squats</li><li>Push-ups (or Incline)</li><li>Alternating Lunges</li><li>Seated Cable Rows</li><li>Plank</li></ul></div>
-                </div>
-            </div>
-
-            <!-- Well-being -->
-            <div id="wellbeing" class="tab-content hidden">
-                <div class="section-title"><h2>Recovery & Well-Being Protocols</h2></div>
-                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="card p-6">
-                        <h3 class="font-bold text-xl mb-4">Breathing & Sleep</h3>
-                        <h4 class="font-semibold mb-2">Conscious Breathing (20 min nightly)</h4>
-                        <p class="mb-4">Focus on circular breathing: connect the inhale and exhale without any pause. This calms the nervous system and can reduce pain perception.</p>
-                        <h4 class="font-semibold mt-6 mb-2">Optimized Sleep Routine (9:30 PM - 5:30 AM)</h4>
-                        <ul class="list-disc list-inside space-y-1"><li><b>Environment:</b> Cool (18°C), completely dark, and quiet.</li><li><b>Wind-Down:</b> No screens for 60 mins before bed.</li><li><b>Consistency:</b> Maintain schedule even on weekends.</li></ul>
-                    </div>
-                    <div class="card p-6">
-                        <h3 class="font-bold text-xl mb-4">Supplement Schedule</h3>
-                        <table class="w-full"><thead class="bg-gray-50"><tr><th class="p-3 text-left">Supplement</th><th class="p-3 text-left">Timing</th><th class="p-3 text-left">Rationale</th></tr></thead><tbody class="divide-y divide-gray-200"><tr><td class="p-3"><b>Vitamin D3, B12, Omega-3, Cranberry</b></td><td class="p-3">With Meal 1</td><td class="p-3 text-sm">Immunity, Energy, Anti-inflammatory</td></tr><tr><td class="p-3"><b>Magnesium Citrate</b></td><td class="p-3">Before Bed</td><td class="p-3 text-sm">Muscle relaxation & sleep quality</td></tr><tr><td class="p-3"><b>Melatonin (Optional)</b></td><td class="p-3">Before Bed</td><td class="p-3 text-sm">To reset sleep cycle if needed</td></tr></tbody></table>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Career -->
-            <div id="career" class="tab-content hidden">
-                <div class="section-title"><h2>Global IT Leader Career Roadmap</h2></div>
-                <div class="card p-6">
-                    <h3 class="font-bold text-xl mb-4">12-Month GCP Certification Arc</h3>
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">Months 1-2: Cloud Digital Leader</div>
-                                <p class="text-sm text-gray-600">Establish business foundation and articulate cloud value to build momentum.</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">Months 3-6: Associate Cloud Engineer</div>
-                                <p class="text-sm text-gray-600">Build technical credibility with hands-on deployment and management skills.</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-title">Months 7-12: Professional Cloud Architect</div>
-                                <p class="text-sm text-gray-600">Elevate to strategist, designing high-level, robust, and scalable solutions.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Family -->
-            <div id="family" class="tab-content hidden">
-                <div class="section-title"><h2>Connected Family & Couple Plan</h2></div>
-                <div class="card p-6">
-                    <h3 class="font-bold text-xl mb-4">Flexible "Activity Menu"</h3>
-                    <p class="mb-4">Choose an activity together after dinner that fits the mood and energy level.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="p-4 bg-green-50 rounded-lg"><b class="font-semibold">Low-Energy</b><ul class="list-none mt-2 space-y-1 text-sm"><li>Read a book aloud</li><li>Listen to a podcast</li><li>Plan a vacation</li></ul></div>
-                        <div class="p-4 bg-yellow-50 rounded-lg"><b class="font-semibold">Medium-Energy</b><ul class="list-none mt-2 space-y-1 text-sm"><li>Neighborhood walk</li><li>Mini-yoga session</li><li>15-min dance party</li></ul></div>
-                        <div class="p-4 bg-blue-50 rounded-lg"><b class="font-semibold">Creative/Engaging</b><ul class="list-none mt-2 space-y-1 text-sm"><li>Board/card game</li><li>Jigsaw puzzle</li><li>Collaborative story</li></ul></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tracking -->
-            <div id="tracking" class="tab-content hidden">
-                <div class="section-title"><h2>Execution & Tracking System</h2></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="card p-6">
-                        <h3 class="font-bold text-xl mb-4">Weekly Reflection AI Coach</h3>
-                        <p class="mb-4">On Sunday, enter your reflections on the past week and get personalized feedback and encouragement.</p>
-                        <textarea id="weekly-reflection-input" class="w-full p-2 border rounded-lg" rows="4" placeholder="What went well? What was a challenge?"></textarea>
-                        <button id="get-feedback-btn" class="mt-2 w-full bg-[var(--success)] text-white font-bold py-2 px-4 rounded-lg hover:opacity-90 transition duration-300">Get Feedback</button>
-                    </div>
-                    <div class="card p-6">
-                        <h3 class="font-bold text-xl mb-4">Digital Integration</h3>
-                        <p class="mb-4">Import your entire recurring schedule into your digital calendar with one click.</p>
-                        <button id="download-ics" class="w-full bg-[var(--primary)] text-white font-bold py-2 px-4 rounded-lg hover:bg-[var(--secondary)] transition duration-300">
-                            <i class="fas fa-calendar-alt mr-2"></i>Download .ics Calendar File
-                        </button>
-                        <p class="text-sm mt-4 text-gray-500"><b>Instructions:</b> Download the file, then import it into your Google, Outlook, or Apple calendar.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-        
-    <!-- Print Button -->
-    <button onclick="window.print()" class="print-button bg-[var(--primary)] text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-[var(--secondary)] transition no-print">
-        <i class="fas fa-print"></i>
-    </button>
-    
-    <!-- Modal for API responses -->
-    <div id="modal" class="modal-overlay hidden no-print">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h3 id="modal-title" class="text-2xl font-bold">Generated Ideas</h3>
-                <button onclick="closeModal()" class="text-2xl font-bold">&times;</button>
-            </div>
-            <div id="modal-body" class="prose"></div>
-        </div>
+  <!-- TABS -->
+  <nav class="sticky top-0 bg-white/80 backdrop-blur-md z-40 no-print" role="tablist" aria-label="Main Sections">
+    <div class="flex overflow-x-auto space-x-2 p-2 container mx-auto">
+      <button data-tab="dashboard" class="tab-button active" role="tab" aria-selected="true">Dashboard</button>
+      <button data-tab="schedule" class="tab-button" role="tab">Schedule</button>
+      <button data-tab="nutrition" class="tab-button" role="tab">Nutrition</button>
+      <button data-tab="exercise" class="tab-button" role="tab">Exercise</button>
+      <button data-tab="wellbeing" class="tab-button" role="tab">Well-Being</button>
+      <button data-tab="career" class="tab-button" role="tab">Career</button>
+      <button data-tab="family" class="tab-button" role="tab">Family</button>
+      <button data-tab="tracking" class="tab-button" role="tab">Tracking</button>
     </div>
+  </nav>
 
+  <!-- CONTENT -->
+  <main class="container mx-auto py-8 space-y-12">
+    <!-- DASHBOARD -->
+    <section id="dashboard" role="tabpanel">
+      <div class="section-title"><h2>Today's Focus</h2><p id="currentDate" class="text-gray-600 mt-1"></p></div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Daily Checklist -->
+        <div class="card p-6">
+          <h3 class="font-bold text-xl mb-4">
+            <i class="fas fa-check-square text-[var(--primary)] mr-2"></i>Daily Checklist
+          </h3>
+          <ul id="daily-checklist" class="space-y-2 text-gray-700" aria-label="Daily tasks"></ul>
+        </div>
+        <!-- Quote -->
+        <div class="card p-6 bg-gradient-to-br from-[var(--primary)] to-[var(--accent)] text-white text-center">
+          <h3 class="font-bold text-xl mb-3">
+            <i class="fas fa-quote-left mr-2"></i>Quote of the Day
+          </h3>
+          <p id="motivational-quote" class="italic"></p>
+        </div>
+        <!-- Hydration -->
+        <div class="card p-6">
+          <h3 class="font-bold text-xl mb-4">
+            <i class="fas fa-tint text-[var(--primary)] mr-2"></i>Hydration & Supplements
+          </h3>
+          <div class="space-y-4">
+            <div>
+              <label for="water-tracker" class="block text-sm font-medium">Water Intake (L)</label>
+              <div class="flex items-center mt-1">
+                <input
+                  type="range"
+                  id="water-tracker"
+                  min="0"
+                  max="4"
+                  step="0.25"
+                  value="0"
+                  class="w-full accent-[var(--primary)]"
+                  aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"
+                />
+                <span id="water-level" class="ml-4 font-semibold text-[var(--primary)]">0.00 L</span>
+              </div>
+            </div>
+            <div>
+              <p class="font-medium mb-2">Supplements</p>
+              <div id="supplement-tracker" class="space-y-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- SCHEDULE -->
+    <section id="schedule" class="hidden" role="tabpanel">
+      <div class="section-title"><h2>Weekly Schedule</h2></div>
 
+      <!-- Desktop Table -->
+      <div class="card overflow-x-auto p-4">
+        <table class="w-full table-auto border-collapse schedule-table">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="p-2 text-left">Time</th>
+              <th class="p-2 text-left">Mon</th>
+              <th class="p-2 text-left">Tue</th>
+              <th class="p-2 text-left">Wed</th>
+              <th class="p-2 text-left">Thu</th>
+              <th class="p-2 text-left">Fri</th>
+              <th class="p-2 text-left">Sat</th>
+              <th class="p-2 text-left">Sun</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr><td class="p-2 font-semibold">5:30–6:00</td><td colspan="7" class="p-2"><span class="tag tag-health">Wake & Hydrate</span></td></tr>
+            <tr><td class="p-2 font-semibold">6:00–7:00</td><td colspan="5" class="p-2"><span class="tag tag-health">Bike Commute</span></td><td class="p-2 bg-green-50"><span class="tag tag-health">Pilates/Yoga</span></td><td class="p-2 bg-green-50"><span class="tag tag-family">Family Walk</span></td></tr>
+            <tr><td class="p-2 font-semibold">7:00–7:30</td><td colspan="5" class="p-2 bg-blue-50"><span class="tag tag-health">AM Gym Session</span></td><td colspan="2" class="p-2">Prepare Breakfast</td></tr>
+            <tr><td class="p-2 font-semibold">7:45–8:15</td><td colspan="5" class="p-2 bg-yellow-50"><span class="tag tag-learning">GCP Study</span></td><td colspan="2" class="p-2">Family Breakfast</td></tr>
+            <tr><td class="p-2 font-semibold">8:30–12:00</td><td colspan="5" class="p-2"><span class="tag tag-work">Work Block</span></td><td colspan="2" class="p-2">Meal Prep & Errands</td></tr>
+            <tr><td class="p-2 font-semibold">12:15–12:45</td><td colspan="5" class="p-2 bg-yellow-50"><span class="tag tag-learning">GCP Study</span></td><td colspan="2" class="p-2">Lunch</td></tr>
+            <tr><td class="p-2 font-semibold">1:00–5:00</td><td colspan="5" class="p-2"><span class="tag tag-work">Work Block</span></td><td colspan="2" class="p-2">Free/Family Time</td></tr>
+            <tr><td class="p-2 font-semibold">5:00–6:00</td><td class="p-2 bg-red-50"><span class="tag tag-health">Lift: Upper</span></td><td class="p-2"><span class="tag tag-health">Bike Home</span></td><td class="p-2 bg-red-50"><span class="tag tag-health">Lift: Lower</span></td><td class="p-2"><span class="tag tag-health">Bike Home</span></td><td class="p-2 bg-red-50"><span class="tag tag-health">Lift: Full</span></td><td colspan="2" class="p-2">Prepare Dinner</td></tr>
+            <tr><td class="p-2 font-semibold">6:00–7:00</td><td colspan="7" class="p-2"><span class="tag tag-family">Family Dinner</span></td></tr>
+            <tr><td class="p-2 font-semibold">7:00–7:30</td><td colspan="7" class="p-2 bg-purple-50"><span class="tag tag-family">Family Activity</span></td></tr>
+            <tr><td class="p-2 font-semibold">7:30–8:00</td><td colspan="7" class="p-2 bg-indigo-50"><span class="tag tag-health">Conscious Breathing</span></td></tr>
+            <tr><td class="p-2 font-semibold">8:00–8:30</td><td colspan="5" class="p-2 bg-yellow-50"><span class="tag tag-learning">GCP Study</span></td><td colspan="2" class="p-2">Wind-down</td></tr>
+            <tr><td class="p-2 font-semibold">9:30 PM</td><td colspan="7" class="p-2"><span class="tag tag-health">Sleep</span></td></tr>
+          </tbody>
+        </table>
+      </div>
 
-    </script>
+      <!-- Mobile Cards -->
+      <div class="schedule-cards no-print" aria-label="Schedule cards (mobile)">
+        <!-- JS will fill these -->
+      </div>
+    </section>
+
+    <!-- NUTRITION -->
+    <section id="nutrition" class="hidden" role="tabpanel">
+      <div class="section-title"><h2>Nutrition</h2></div>
+      <div class="card p-6 space-y-4">
+        <div>
+          <h3 class="font-bold text-xl mb-2">Core Principles</h3>
+          <ul class="list-disc list-inside">
+            <li>17/7 IF (4×/wk): 12–7 PM</li>
+            <li>Low-FODMAP, low-carb, low-sugar, low-salt</li>
+            <li>Base meal + family add-ons</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-xl mb-2">Seasonal Shopping</h3>
+          <div id="seasonal-shopping-list"></div>
+          <button
+            id="generate-recipes-btn"
+            class="w-full bg-[var(--primary)] text-white py-2 rounded-lg hover:bg-[var(--secondary)] transition flex justify-center items-center gap-2"
+          >
+            <i class="fas fa-magic"></i> Generate Recipes
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCISE -->
+    <section id="exercise" class="hidden" role="tabpanel">
+      <div class="section-title"><h2>Exercise</h2></div>
+      <div class="card p-6 mb-6">
+        <h3 class="font-bold text-xl mb-3">Sciatica-Safe Framework</h3>
+        <ul class="list-disc list-inside">
+          <li>Warm/cool-down 5–10m</li>
+          <li>Stop on nerve pain</li>
+          <li>Neutral spine</li>
+        </ul>
+      </div>
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="card p-6">
+          <h4 class="font-semibold mb-2">Upper (Mon)</h4>
+          <ul class="list-disc list-inside">
+            <li>Dumbbell Press</li>
+            <li>Cable Row</li>
+            <li>Single-Arm Row</li>
+            <li>Overhead Press</li>
+            <li>Arms</li>
+          </ul>
+        </div>
+        <div class="card p-6">
+          <h4 class="font-semibold mb-2">Lower (Wed)</h4>
+          <ul class="list-disc list-inside">
+            <li>Goblet Squat</li>
+            <li>Lunge</li>
+            <li>Leg Press</li>
+            <li>Glute Bridge</li>
+            <li>Calf Raise</li>
+          </ul>
+        </div>
+        <div class="card p-6">
+          <h4 class="font-semibold mb-2">Full (Fri)</h4>
+          <ul class="list-disc list-inside">
+            <li>Squat</li>
+            <li>Push-up</li>
+            <li>Lunge</li>
+            <li>Row</li>
+            <li>Plank</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- WELL-BEING -->
+    <section id="wellbeing" class="hidden" role="tabpanel">
+      <div class="section-title"><h2>Well-Being</h2></div>
+      <div class="grid lg:grid-cols-2 gap-6">
+        <div class="card p-6">
+          <h3 class="font-bold text-xl mb-3">Breathing & Sleep</h3>
+          <p class="mb-3">4-7-8: inhale 4s, hold 7s, exhale 8s ×20m</p>
+          <h4 class="font-semibold mb-1">Sleep</h4>
+          <ul class="list-disc list-inside">
+            <li>No screens after 8:30</li>
+            <li>Dark, 18°C</li>
+            <li>Consistent times</li>
+          </ul>
+        </div>
+        <div class="card p-6">
+          <h3 class="font-bold text-xl mb-3">Supplements</h3>
+          <div class="space-y-2">
+            <div class="flex justify-between"><span>D3, B12, Ω-3, Cranberry</span><span>Meal 1</span></div>
+            <div class="flex justify-between"><span>Mg Citrate</span><span>Bedtime</span></div>
+            <div class="flex justify-between"><span>Melatonin</span><span>Bedtime</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAREER -->
+    <section id="career" class="hidden" role="tabpanel">
+      <div class="section-title"><h2>Career</h2></div>
+      <div class="card p-6">
+        <h3 class="font-bold text-xl mb-4">GCP Timeline</h3>
+        <ul class="list-disc list-inside">
+          <li><strong>1–2 mo:</strong> Digital Leader</li>
+          <li><strong>3–6 mo:</strong> Associate Engineer</li>
+          <li><strong>7–12 mo:</strong> Cloud Architect</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAMILY -->
+    <section id="family" class="hidden" role="tabpanel">
+      <div class="section-title"><h2>Family</h2></div>
+      <div class="card p-6">
+        <h3 class="font-bold text-xl mb-3">After Dinner</h3>
+        <ul class="list-disc list-inside">
+          <li>Family walk</li>
+          <li>Games</li>
+          <li>Mini yoga</li>
+          <li>Reading</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TRACKING -->
+    <section id="tracking" class="hidden" role="tabpanel">
+      <div class="section-title"><h2>Tracking</h2></div>
+      <div class="space-y-6">
+        <div class="card p-6">
+          <h3 class="font-bold text-xl mb-3">Weekly Reflection</h3>
+          <textarea
+            id="weekly-reflection-input"
+            class="w-full border rounded p-2 mb-3"
+            rows="4"
+            placeholder="What went well? Challenges?"
+          ></textarea>
+          <button
+            id="get-feedback-btn"
+            class="bg-[var(--success)] text-white px-4 py-2 rounded hover:opacity-90 transition"
+          >
+            Get AI Feedback
+          </button>
+        </div>
+        <div class="card p-6">
+          <h3 class="font-bold text-xl mb-3">Calendar Export</h3>
+          <button
+            id="download-ics"
+            class="bg-[var(--primary)] text-white px-4 py-2 rounded hover:bg-[var(--secondary)] transition"
+          >
+            <i class="fas fa-calendar-alt mr-2"></i> Download .ics
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- PRINT -->
+  <button
+    onclick="window.print()"
+    class="no-print fixed bottom-6 right-6 bg-[var(--primary)] text-white p-4 rounded-full shadow-lg hover:bg-[var(--secondary)] transition"
+    aria-label="Print plan"
+  >
+    <i class="fas fa-print"></i>
+  </button>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal-overlay hidden no-print" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <div class="flex justify-between items-center mb-4">
+        <h3 id="modal-title" class="text-2xl font-bold"></h3>
+        <button onclick="closeModal()" class="text-2xl" aria-label="Close">&times;</button>
+      </div>
+      <div id="modal-body" class="prose"></div>
+    </div>
+  </div>
+
+  <script>
+    const scheduleData = [
+      { time:"5:30–6:00", mon:"Wake & Hydrate", tue:"Wake & Hydrate", wed:"Wake & Hydrate", thu:"Wake & Hydrate", fri:"Wake & Hydrate", sat:"Pilates/Yoga", sun:"Family Walk" },
+      { time:"6:00–7:00", mon:"Bike Commute", tue:"Bike Commute", wed:"Bike Commute", thu:"Bike Commute", fri:"Bike Commute", sat:"Pilates/Yoga", sun:"Family Walk" },
+      { time:"7:00–7:30", mon:"AM Gym", tue:"AM Gym", wed:"AM Gym", thu:"AM Gym", fri:"AM Gym", sat:"Prep Breakfast", sun:"Prep Breakfast" },
+      { time:"7:45–8:15", mon:"GCP Study", tue:"GCP Study", wed:"GCP Study", thu:"GCP Study", fri:"GCP Study", sat:"Family Breakfast", sun:"Family Breakfast" },
+      { time:"8:30–12:00", mon:"Work Block", tue:"Work Block", wed:"Work Block", thu:"Work Block", fri:"Work Block", sat:"Meal Prep", sun:"Meal Prep" },
+      { time:"12:15–12:45",mon:"GCP Study",tue:"GCP Study",wed:"GCP Study",thu:"GCP Study",fri:"GCP Study",sat:"Lunch",sun:"Lunch" },
+      { time:"1:00–5:00", mon:"Work Block", tue:"Work Block", wed:"Work Block", thu:"Work Block", fri:"Work Block", sat:"Free Time", sun:"Free Time" },
+      { time:"5:00–6:00", mon:"Lift: Upper", tue:"Bike Home", wed:"Lift: Lower", thu:"Bike Home", fri:"Lift: Full", sat:"Prep Dinner", sun:"Prep Dinner" },
+      { time:"6:00–7:00", mon:"Family Dinner",tue:"Family Dinner",wed:"Family Dinner",thu:"Family Dinner",fri:"Family Dinner",sat:"Family Dinner",sun:"Family Dinner" },
+      { time:"7:00–7:30", mon:"Family Activity",tue:"Family Activity",wed:"Family Activity",thu:"Family Activity",fri:"Family Activity",sat:"Family Activity",sun:"Family Activity" },
+      { time:"7:30–8:00", mon:"Breathing",tue:"Breathing",wed:"Breathing",thu:"Breathing",fri:"Breathing",sat:"Breathing",sun:"Breathing" },
+      { time:"8:00–8:30", mon:"GCP Study",tue:"GCP Study",wed:"GCP Study",thu:"GCP Study",fri:"GCP Study",sat:"Wind-down",sun:"Wind-down" },
+      { time:"9:30 PM", mon:"Sleep",tue:"Sleep",wed:"Sleep",thu:"Sleep",fri:"Sleep",sat:"Sleep",sun:"Sleep" }
+    ];
+
+    const tasks = [
+      "5:30 AM Wake-up",
+      "AM Gym",
+      "3.5 L+ Water",
+      "20 m Breathing",
+      "9:30 PM Sleep",
+      "Family Time",
+      "GCP Study"
+    ];
+
+    const supplements = ["Vitamin D","B12","Omega-3","Cranberry","Magnesium"];
+
+    const seasonal = {
+      Winter:{produce:"Apples,Pears,Carrots,Squash",protein:"Chicken,Cod,Eggs",pantry:"Quinoa,Rice,Oats,Nuts"},
+      Spring:{produce:"Asparagus,Spinach,Berries",protein:"Chicken,Salmon,Eggs",pantry:"Quinoa,Rice,Nuts"},
+      Summer:{produce:"Berries,Peppers,Tomatoes,Zucchini",protein:"Chicken,Fish,Eggs",pantry:"Quinoa,Rice,Nuts"},
+      Fall:{produce:"Apples,Pears,Pumpkins",protein:"Turkey,Salmon,Eggs",pantry:"Quinoa,Rice,Nuts"}
+    };
+
+    // Tab switching:
+    document.querySelector("nav").addEventListener("click", e => {
+      const btn = e.target.closest("[data-tab]");
+      if (!btn) return;
+      document.querySelectorAll(".tab-button").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll("main section").forEach(sec=>{
+        sec.id===btn.dataset.tab 
+          ? sec.classList.remove("hidden") 
+          : sec.classList.add("hidden");
+      });
+    });
+
+    function showModal(title, html){
+      document.getElementById("modal-title").textContent=title;
+      document.getElementById("modal-body").innerHTML=html;
+      document.getElementById("modal").classList.remove("hidden");
+    }
+    function closeModal(){
+      document.getElementById("modal").classList.add("hidden");
+    }
+
+    document.addEventListener("DOMContentLoaded",()=>{
+      // Date
+      const d=new Date();
+      document.getElementById("currentDate").textContent=d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+
+      // Checklist
+      const ul=document.getElementById("daily-checklist");
+      tasks.forEach(t=>ul.innerHTML+=`<li class="flex items-center"><input type="checkbox" class="mr-2 accent-[var(--primary)]"/><span>${t}</span></li>`);
+
+      // Supplements
+      const supDiv=document.getElementById("supplement-tracker");
+      supplements.forEach(s=>supDiv.innerHTML+=`<div class="flex justify-between"><span>${s}</span><input type="checkbox" class="accent-[var(--primary)]"/></div>`);
+
+      // Water
+      const slider=document.getElementById("water-tracker");
+      slider.addEventListener("input",e=>{
+        slider.setAttribute("aria-valuenow",e.target.value);
+        document.getElementById("water-level").textContent=parseFloat(e.target.value).toFixed(2)+" L";
+      });
+
+      // Quote
+      const quotes=[
+        "Discipline is the bridge between goals and accomplishment.",
+        "Small steps lead to big change.",
+        "Consistency beats intensity over time."
+      ];
+      document.getElementById("motivational-quote").textContent=`"${quotes[Math.floor(Math.random()*quotes.length)]}"`;
+
+      // Seasonal
+      const m=d.getMonth(),season=m>=2&&m<=4?"Spring":m>=5&&m<=7?"Summer":m<=10?"Fall":"Winter";
+      const shop=seasonal[season];
+      document.getElementById("seasonal-shopping-list").innerHTML=
+        `<strong>${season}:</strong><br/>Produce: ${shop.produce}<br/>Protein: ${shop.protein}<br/>Pantry: ${shop.pantry}`;
+
+      // Recipes button
+      document.getElementById("generate-recipes-btn").addEventListener("click",()=>{
+        const prompt=`Recipes from ${shop.produce}/${shop.protein}/${shop.pantry}.`;
+        callGemini(prompt);
+      });
+
+      // Reflection
+      document.getElementById("get-feedback-btn").addEventListener("click",()=>{
+        const txt=document.getElementById("weekly-reflection-input").value.trim();
+        if(!txt) return showModal("Error","<p>Please enter reflection.</p>");
+        callGemini(`Reflection: ${txt}. Encourage + suggest.`);
+      });
+
+      // ICS
+      document.getElementById("download-ics").addEventListener("click",()=>{
+        const cal=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//MasterLifePlan//EN","END:VCALENDAR"].join("\n");
+        const blob=new Blob([cal],{type:"text/calendar"}),a=document.createElement("a");
+        a.href=URL.createObjectURL(blob);a.download="Master_Life_Plan.ics";a.click();
+      });
+
+      // Populate mobile schedule cards
+      const cardsContainer=document.querySelector(".schedule-cards");
+      scheduleData.forEach(r=>{
+        const card=document.createElement("div");
+        card.className="card p-4";
+        card.innerHTML=`
+          <h4 class="font-semibold mb-2">${r.time}</h4>
+          <ul class="list-disc list-inside">
+            <li><strong>Mon:</strong> ${r.mon}</li>
+            <li><strong>Tue:</strong> ${r.tue}</li>
+            <li><strong>Wed:</strong> ${r.wed}</li>
+            <li><strong>Thu:</strong> ${r.thu}</li>
+            <li><strong>Fri:</strong> ${r.fri}</li>
+            <li><strong>Sat:</strong> ${r.sat}</li>
+            <li><strong>Sun:</strong> ${r.sun}</li>
+          </ul>`;
+        cardsContainer.append(card);
+      });
+    });
+
+    async function callGemini(prompt){
+      try {
+        const res=await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDt8C5DDP9PQO1v7KijZ4MhMFMFpquFBmg`,
+          {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}]})}
+        );
+        if(!res.ok) throw new Error(res.statusText);
+        const j=await res.json();
+        const txt=j.candidates?.[0]?.content?.parts?.[0]?.text||"";
+        showModal("AI Response",txt.replace(/\n/g,"<br>"));
+      } catch(e){
+        showModal("Error",`<p>${e.message}</p>`);
+      }
+    }
+  </script>
 </body>
 </html>
